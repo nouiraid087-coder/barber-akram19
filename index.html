@@ -1,41 +1,28 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" class="dark">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>صالون أكرم للحلاقة - Barber Akram</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Tajawal', 'sans-serif'] },
-          colors: { gold: { 400: '#FBBF24', 500: '#F59E0B', 600: '#D97706' } }
-        }
-      }
-    }
-  </script>
   <style>
-    body { font-family: 'Tajawal', sans-serif; }
+    body { font-family: 'Tajawal', sans-serif; background-color: #030712; color: #f3f4f6; }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen">
+<body class="min-h-screen">
   <div id="root"></div>
 
-  <!-- React & React DOM -->
+  <!-- React & ReactDOM -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-  <!-- Firebase SDKs -->
+  <!-- Firebase SDK v10 (Compat) -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
   <script type="text/babel">
-    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyAI3L5P-JG7yAbqlgLl",
       authDomain: "barber-kimou.firebaseapp.com",
@@ -54,7 +41,7 @@
     const MINUTES_PER_CLIENT = 35;
 
     function App() {
-      const [view, setView] = React.useState('client'); // 'client' or 'admin'
+      const [view, setView] = React.useState('client');
       const [pinInput, setPinInput] = React.useState('');
       const [pinError, setPinError] = React.useState(false);
       const [isAuthenticated, setIsAuthenticated] = React.useState(false);
@@ -65,38 +52,29 @@
       const [service, setService] = React.useState('حلاقة شعر');
       const [isShopOpen, setIsShopOpen] = React.useState(true);
 
-      // حقول الإضافة اليدوية من طرف الحلاق
       const [manualName, setManualName] = React.useState('');
       const [manualPhone, setManualPhone] = React.useState('');
       const [manualService, setManualService] = React.useState('حلاقة شعر');
 
-      // Listen to Firestore real-time updates
       React.useEffect(() => {
-        const unsubscribeQueue = db.collection('queue')
-          .orderBy('createdAt', 'asc')
-          .onSnapshot(snapshot => {
-            const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setQueue(data);
-          });
+        const unsubQueue = db.collection('queue').orderBy('createdAt', 'asc').onSnapshot(snapshot => {
+          const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          setQueue(data);
+        });
 
-        const unsubscribeSettings = db.collection('settings').doc('shopStatus')
-          .onSnapshot(doc => {
-            if (doc.exists) {
-              setIsShopOpen(doc.data().isOpen);
-            } else {
-              db.collection('settings').doc('shopStatus').set({ isOpen: true });
-            }
-          });
+        const unsubSettings = db.collection('settings').doc('shopStatus').onSnapshot(doc => {
+          if (doc.exists) {
+            setIsShopOpen(doc.data().isOpen);
+          } else {
+            db.collection('settings').doc('shopStatus').set({ isOpen: true });
+          }
+        });
 
         return () => {
-          unsubscribeQueue();
-          unsubscribeSettings();
+          unsubQueue();
+          unsubSettings();
         };
       }, []);
-
-      React.useEffect(() => {
-        if (window.lucide) window.lucide.createIcons();
-      }, [view, queue, isAuthenticated, isShopOpen]);
 
       const handleAddClient = async (e) => {
         e.preventDefault();
@@ -108,7 +86,7 @@
 
         await db.collection('queue').add({
           name: clientName,
-          phone: clientPhone,
+          phone: clientPhone || 'بدون رقم',
           service: service,
           status: 'waiting',
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -119,7 +97,6 @@
         alert('تم تسجيل حضورك في الطابور بنجاح!');
       };
 
-      // إضافة زبون يدوي من طرف الحلاق (للشيوخ والأطفال)
       const handleManualAdd = async (e) => {
         e.preventDefault();
         if (!manualName.trim()) return;
@@ -159,16 +136,15 @@
         }
       };
 
-      // حساب العناصر النشطة والمنتظرة
       const waitingList = queue.filter(item => item.status === 'waiting');
       const inProgressItem = queue.find(item => item.status === 'in-progress');
 
       return (
         <div className="max-w-md mx-auto p-4 min-h-screen flex flex-col justify-between">
-          <header className="flex justify-between items-center mb-6 bg-slate-900 p-4 rounded-xl border border-slate-800 shadow-lg">
+          <header className="flex justify-between items-center mb-6 bg-gray-900 p-4 rounded-xl border border-gray-800 shadow-lg">
             <div>
-              <h1 className="text-xl font-bold text-gold-400">صالون أكرم للحلاقة</h1>
-              <p className="text-xs text-slate-400">نظام إدارة الطابور الذكي (سيتيف)</p>
+              <h1 className="text-xl font-bold text-amber-400">صالون أكرم للحلاقة</h1>
+              <p className="text-xs text-gray-400">مزلوق، سطيف</p>
             </div>
             <button 
               onClick={() => {
@@ -180,237 +156,52 @@
                   setPinInput('');
                 }
               }}
-              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition"
+              className="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-semibold rounded-lg border border-gray-700 transition"
             >
               {view === 'client' ? 'لوحة الحلاق' : 'واجهة الزبون'}
             </button>
           </header>
 
           <main className="flex-1 space-y-6">
-            {/* حالة الصالون */}
-            <div className={`p-3 rounded-lg text-center text-sm font-bold flex items-center justify-center gap-2 ${isShopOpen ? 'bg-emerald-950/80 border border-emerald-800 text-emerald-400' : 'bg-rose-950/80 border border-rose-800 text-rose-400'}`}>
+            <div className={`p-3 rounded-lg text-center text-sm font-bold flex items-center justify-center gap-2 ${isShopOpen ? 'bg-emerald-950 border border-emerald-800 text-emerald-400' : 'bg-rose-950 border border-rose-800 text-rose-400'}`}>
               <span className={`w-2.5 h-2.5 rounded-full ${isShopOpen ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`}></span>
               {isShopOpen ? 'الصالون مفتوح ويستقبل الزبائن' : 'الصالون مغلق حالياً'}
             </div>
 
             {view === 'client' ? (
               <div className="space-y-6">
-                
-                {/* تنبيه دور الزبون الذكي (إذا كان ترتيبه الأول أو الثاني في الانتظار) */}
                 {waitingList.length > 0 && (
                   <div className="bg-amber-500/10 border border-amber-500/40 p-4 rounded-xl text-center space-y-1">
-                    <div className="text-xs text-amber-400 font-bold flex items-center justify-center gap-1">
-                      <span>🔔 نظام التنبيه اللحظي</span>
-                    </div>
+                    <p className="text-xs text-amber-400 font-bold">🔔 نظام التنبيه الذكي</p>
                     {inProgressItem ? (
-                      <p className="text-xs text-slate-300">
-                        الزبون الحالي على الكرسي: <strong className="text-gold-400">{inProgressItem.name}</strong> 
-                        <br/>الوقت التقديري لكل زبون: <span className="text-gold-400 font-bold">{MINUTES_PER_CLIENT} دقيقة</span>
+                      <p className="text-xs text-gray-300">
+                        الزبون على الكرسي: <strong className="text-amber-400">{inProgressItem.name}</strong>
+                        <br/>الوقت التقديري للزبون: <span className="text-amber-400 font-bold">{MINUTES_PER_CLIENT} دقيقة</span>
                       </p>
                     ) : (
-                      <p className="text-xs text-slate-300">الكرسي فارغ حالياً، بانتظار بدء الحلاقة!</p>
+                      <p className="text-xs text-gray-300">الكرسي فارغ حالياً!</p>
                     )}
                   </div>
                 )}
 
-                {/* نموذج حجز الزبون لنفسه */}
-                <form onSubmit={handleAddClient} className="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-4">
-                  <h2 className="text-lg font-bold text-slate-100 mb-2">حجز دور جديد في الطابور</h2>
+                <form onSubmit={handleAddClient} className="bg-gray-900 p-5 rounded-xl border border-gray-800 space-y-4">
+                  <h2 className="text-lg font-bold text-gray-100 mb-2">حجز دور جديد</h2>
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1">الاسم الكامل *</label>
+                    <label className="block text-xs font-medium text-gray-400 mb-1">الاسم الكامل *</label>
                     <input 
                       type="text" 
                       required 
                       value={clientName} 
                       onChange={e => setClientName(e.target.value)}
                       placeholder="أدخل اسمك الكريم"
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm focus:outline-none focus:border-gold-500 text-slate-100"
+                      className="w-full bg-gray-950 border border-gray-800 rounded-lg p-2.5 text-sm focus:outline-none focus:border-amber-500 text-gray-100"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1">رقم الهاتف (اختياري)</label>
+                    <label className="block text-xs font-medium text-gray-400 mb-1">رقم الهاتف (اختياري)</label>
                     <input 
                       type="tel" 
                       value={clientPhone} 
                       onChange={e => setClientPhone(e.target.value)}
                       placeholder="06XXXXXXXX"
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm focus:outline-none focus:border-gold-500 text-slate-100"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1">الخدمة المطلوبة</label>
-                    <select 
-                      value={service} 
-                      onChange={e => setService(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm focus:outline-none focus:border-gold-500 text-slate-100"
-                    >
-                      <option>حلاقة شعر (35 دق)</option>
-                      <option>حلاقة ذقن (20 دق)</option>
-                      <option>شعر + ذقن (50 دق)</option>
-                      <option>العناية بالبشرة / سشوار</option>
-                    </select>
-                  </div>
-                  <button 
-                    type="submit" 
-                    disabled={!isShopOpen}
-                    className="w-full bg-gold-500 hover:bg-gold-600 disabled:opacity-50 text-slate-950 font-bold py-3 rounded-lg text-sm transition shadow-md"
-                  >
-                    تأكيد الحجز والدخول للطابور
-                  </button>
-                </form>
-
-                {/* قائمة الانتظار مع الوقت التقديري */}
-                <div className="bg-slate-900 p-5 rounded-xl border border-slate-800">
-                  <h2 className="text-lg font-bold text-slate-100 mb-4 flex justify-between items-center">
-                    <span>قائمة المنتظرين</span>
-                    <span className="text-xs bg-slate-800 text-gold-400 px-2.5 py-1 rounded-full">{queue.length} في الطابور</span>
-                  </h2>
-                  
-                  {queue.length === 0 ? (
-                    <p className="text-center text-slate-500 text-sm py-4">لا يوجد زبائن في الانتظار حالياً.</p>
-                  ) : (
-                    <div className="space-y-2">
-                      {queue.map((item, index) => {
-                        const estimatedMinutes = index * MINUTES_PER_CLIENT;
-                        return (
-                          <div key={item.id} className={`p-3 rounded-lg flex items-center justify-between border ${item.status === 'in-progress' ? 'bg-gold-500/10 border-gold-500/50' : 'bg-slate-950 border-slate-800'}`}>
-                            <div className="flex items-center gap-3">
-                              <span className="w-7 h-7 rounded-full bg-slate-800 text-gold-400 flex items-center justify-center font-bold text-xs">#{index + 1}</span>
-                              <div>
-                                <p className="font-semibold text-sm text-slate-200">{item.name}</p>
-                                <p className="text-xs text-slate-500">{item.service}</p>
-                              </div>
-                            </div>
-                            <div className="text-left">
-                              {item.status === 'in-progress' ? (
-                                <span className="text-xs font-bold text-gold-400 bg-gold-400/10 px-2 py-1 rounded">على الكرسي الآن ✂️</span>
-                              ) : (
-                                <div className="text-xs text-slate-400">
-                                  <span>انتظار تقريبي: </span>
-                                  <strong className="text-gold-400">{estimatedMinutes} دقيقة</strong>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              </div>
-            ) : (
-              /* واجهة الحلاق */
-              <div>
-                {!isAuthenticated ? (
-                  <form onSubmit={handlePinSubmit} className="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 text-center">
-                    <h2 className="text-lg font-bold text-slate-100">رمز الدخول لوحة الحلاق</h2>
-                    <input 
-                      type="password" 
-                      maxLength="6"
-                      value={pinInput}
-                      onChange={e => setPinInput(e.target.value)}
-                      placeholder="أدخل الرمز السري"
-                      className="w-full text-center bg-slate-950 border border-slate-800 rounded-lg p-3 text-lg focus:outline-none focus:border-gold-500 text-slate-100"
-                    />
-                    {pinError && <p className="text-xs text-rose-500">الرمز السري غير صحيح!</p>}
-                    <button type="submit" className="w-full bg-gold-500 hover:bg-gold-600 text-slate-950 font-bold py-2.5 rounded-lg text-sm transition">
-                      دخول للوحة التحكم
-                    </button>
-                  </form>
-                ) : (
-                  <div className="space-y-6">
-                    {/* زر فتح/إغلاق الصالون */}
-                    <div className="bg-slate-900 p-4 rounded-xl border border-slate-800 flex justify-between items-center">
-                      <span className="text-sm font-semibold">حالة استقبال الحجوزات:</span>
-                      <button 
-                        onClick={toggleShopStatus}
-                        className={`px-4 py-2 rounded-lg text-xs font-bold transition ${isShopOpen ? 'bg-rose-600 hover:bg-rose-700 text-white' : 'bg-emerald-600 hover:bg-emerald-700 text-white'}`}
-                      >
-                        {isShopOpen ? 'إغلاق الاستقبال' : 'فتح الاستقبال'}
-                      </button>
-                    </div>
-
-                    {/* إضافة زبون يدوي للحلاق (شيوخ / أطفال) */}
-                    <form onSubmit={handleManualAdd} className="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-3">
-                      <h3 className="text-sm font-bold text-gold-400">➕ إضافة زبون يدوي (للكبار والأطفال بالصالون)</h3>
-                      <div>
-                        <input 
-                          type="text" 
-                          required
-                          value={manualName} 
-                          onChange={e => setManualName(e.target.value)}
-                          placeholder="اسم الزبون (مثال: عمي أحمد / طفل)"
-                          className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs focus:outline-none focus:border-gold-500 text-slate-100"
-                        />
-                      </div>
-                      <div className="flex gap-2">
-                        <select 
-                          value={manualService} 
-                          onChange={e => setManualService(e.target.value)}
-                          className="flex-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs focus:outline-none focus:border-gold-500 text-slate-100"
-                        >
-                          <option>حلاقة شعر</option>
-                          <option>حلاقة ذقن</option>
-                          <option>شعر + ذقن</option>
-                        </select>
-                        <button 
-                          type="submit" 
-                          className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition"
-                        >
-                          إضافة للطابور
-                        </button>
-                      </div>
-                    </form>
-
-                    {/* إدارة الطابور الحالية */}
-                    <div className="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-3">
-                      <h2 className="text-lg font-bold text-slate-100 mb-2">إدارة الطابور النشط</h2>
-                      {queue.length === 0 ? (
-                        <p className="text-center text-slate-500 text-sm py-4">الطابور فارغ تماماً.</p>
-                      ) : (
-                        queue.map((item, index) => (
-                          <div key={item.id} className="p-3 bg-slate-950 rounded-lg border border-slate-800 flex flex-col gap-2">
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <span className="text-xs font-bold text-gold-400">#{index + 1}</span>
-                                <h3 className="font-bold text-slate-200 text-sm">{item.name}</h3>
-                                {item.phone && <p className="text-xs text-slate-400">{item.phone}</p>}
-                                <p className="text-xs text-slate-500 mt-1">{item.service}</p>
-                              </div>
-                              <span className={`text-xs px-2 py-0.5 rounded ${item.status === 'in-progress' ? 'bg-gold-500/20 text-gold-400' : 'bg-slate-800 text-slate-400'}`}>
-                                {item.status === 'in-progress' ? 'قيد الحلاقة' : 'في الانتظار'}
-                              </span>
-                            </div>
-                            <div className="flex gap-2 pt-2 border-t border-slate-900">
-                              {item.status !== 'in-progress' && (
-                                <button 
-                                  onClick={() => handleStatusChange(item.id, 'in-progress')}
-                                  className="flex-1 bg-gold-500/20 hover:bg-gold-500/30 text-gold-400 text-xs font-bold py-1.5 rounded transition"
-                                >
-                                  استدعاء للكرسي 🔔
-                                </button>
-                              )}
-                              <button 
-                                >
-                                onClick={() => handleStatusChange(item.id, 'deleted')}
-                                className="flex-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 text-xs font-bold py-1.5 rounded transition"
-                              >
-                                إنهاء / حذف من الطابور
-                              </button>
-                            </div>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-          </main>
-
-          <footer className="mt-8 text-center text-xs text-slate-600 border-t border-slate-900 pt-4">
-            صالون أكرم للحلاقة - مزلوق، سطيف &copy; 2026
-          </footer>
-        </div>
-      );
-    }
+                      className="w-full bg-gray-950 border border-gray-800 rounded-lg p-2.5 text-sm focus:outline-none focus:border-amber-50
