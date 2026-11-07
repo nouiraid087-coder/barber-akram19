@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صالون أكرم للحلاقة</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+        body { font-family: 'Cairo', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        function BarberApp() {
+            const [viewMode, setViewMode] = React.useState('client'); // 'client' أو 'admin'
+            const [isShopOpen, setIsShopOpen] = React.useState(true);
+            
+            const [servicesList, setServicesList] = React.useState([
+                { id: 'adult_haircut', name: 'حلاقة شعر كبار', price: 500, duration: 20 },
+                { id: 'child_haircut', name: 'حلاقة شعر صغار', price: 400, duration: 15 },
+                { id: 'beard', name: 'حلاقة الذقن (اللحية)', price: 300, duration: 15 },
+                { id: 'full_adult', name: 'حلاقة كاملة (شعر + ذقن)', price: 700, duration: 35 },
+            ]);
+
+            const [newServiceName, setNewServiceName] = React.useState('');
+            const [newServicePrice, setNewServicePrice] = React.useState('');
+            const [newServiceDuration, setNewServiceDuration] = React.useState('');
+            const [showAddServiceModal, setShowAddServiceModal] = React.useState(false);
+
+            const [queue, setQueue] = React.useState([
+                { id: 1, name: 'أحمد علي', phone: '0555123456', serviceId: 'full_adult', serviceName: 'حلاقة كاملة (شعر + ذقن)' },
+                { id: 2, name: 'محمد صابر', phone: '0666987654', serviceId: 'adult_haircut', serviceName: 'حلاقة شعر كبار' },
+            ]);
+
+            // بيانات حجز الزبون الجديد
+            const [clientName, setClientName] = React.useState('');
+            const [clientPhone, setClientPhone] = React.useState('');
+            const [selectedService, setSelectedService] = React.useState('adult_haircut');
+            const [myBooking, setMyBooking] = React.useState(null);
+
+            // دالة التحويل لوضع الحلاق مع طلب الرمز السري
+            const handleAdminAccess = () => {
+                if (viewMode === 'admin') {
+                    setViewMode('client');
+                    return;
+                }
+                const pin = prompt("الرجاء إدخال الرمز السري الخاص بلوحة التحكم:");
+                if (pin === "200319") {
+                    setViewMode('admin');
+                } else if (pin !== null) {
+                    alert("الرمز السري غير صحيح!");
+                }
+            };
+
+            const handleJoinQueue = (e) => {
+                e.preventDefault();
+                if (!clientName.trim() || !clientPhone.trim()) {
+                    alert('يرجى إدخال الاسم ورقم الهاتف');
+                    return;
+                }
+                const service = servicesList.find(s => s.id === selectedService);
+                const newEntry = {
+                    id: Date.now(),
+                    name: clientName,
+                    phone: clientPhone,
+                    serviceId: selectedService,
+                    serviceName: service ? service.name : 'حلاقة'
+                };
+                setQueue([...queue, newEntry]);
+                setMyBooking(newEntry);
+                setClientName('');
+                setClientPhone('');
+            };
+
+            const handleNextCustomer = () => {
+                if (queue.length === 0) return;
+                setQueue(queue.slice(1));
+            };
+
+            const handleRemoveFromQueue = (id) => {
+                setQueue(queue.filter(item => item.id !== id));
+                if (myBooking && myBooking.id === id) {
+                    setMyBooking(null);
+                }
+            };
+
+            const handleAddService = (e) => {
+                e.preventDefault();
+                if (!newServiceName || !newServicePrice) return;
+                const newServ = {
+                    id: 'serv_' + Date.now(),
+                    name: newServiceName,
+                    price: Number(newServicePrice),
+                    duration: Number(newServiceDuration) || 15
+                };
+                setServicesList([...servicesList, newServ]);
+                setNewServiceName('');
+                setNewServicePrice('');
+                setNewServiceDuration('');
+                setShowAddServiceModal(false);
+            };
+
+            const handleDeleteService = (id) => {
+                setServicesList(servicesList.filter(s => s.id !== id));
+            };
+
+            return (
+                <div className="max-w-md mx-auto min-h-screen bg-slate-900 border-x border-slate-800 shadow-2xl flex flex-col">
+                    {/* شريط العنوان العلوي */}
+                    <header className="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-50 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500 border border-amber-500/20">
+                                <i data-lucide="scissors" className="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h1 className="font-bold text-base text-white">صالون أكرم للحلاقة</h1>
+                                <span className="text-xs flex items-center gap-1.5 text-emerald-400 font-medium">
+                                    <span className={`w-2 h-2 rounded-full ${isShopOpen ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`}></span>
+                                    {isShopOpen ? 'الصالون مفتوح حالياً' : 'الصالون مغلق'}
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* زر التبديل محمي بالرمز السري */}
+                        <button 
+                            onClick={handleAdminAccess}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border ${
+                                viewMode === 'admin' 
+                                ? 'bg-amber-500 text-slate-950 border-amber-400' 
+                                : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'
+                            }`}
+                        >
+                            <i data-lucide={viewMode === 'admin' ? "user" : "lock"} className="w-3.5 h-3.5"></i>
+                            {viewMode === 'admin' ? 'واجهة الزبون' : 'واجهة الحلاق'}
+                        </button>
+                    </header>
+
+                    {/* المحتوى الرئيسي */}
+                    <main className="p-4 flex-1 flex flex-col gap-5 pb-10">
+                        {viewMode === 'admin' ? (
+                            /* --- لوحة تحكم الحلاق (محمية بكلمة سر) --- */
+                            <div className="flex flex-col gap-5 animate-fadeIn">
+                                <div className="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-4 flex flex-col gap-3">
+                                    <div className="flex justify-between items-center">
+                                        <h2 className="font-bold text-sm text-slate-200">حالة الصالون والحجز</h2>
+                                        <button 
+                                            onClick={() => setIsShopOpen(!isShopOpen)}
+                                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${isShopOpen ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20 hover:bg-rose-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20'}`}
+                                        >
+                                            {isShopOpen ? 'إغلاق الصالون' : 'فتح الصالون'}
+                                        </button>
+                                    </div>
+
+                                    {/* الزبون الحالي */}
+                                    <div className="bg-slate-900/80 rounded-xl p-3.5 border border-slate-700 flex flex-col gap-2">
+                                        <span className="text-xs text-slate-400">الزبون الحالي على الكرسي:</span>
+                                        {queue.length > 0 ? (
+                                            <div className="flex justify-between items-center">
+                                                <div>
+                                                    <p className="font-bold text-amber-400 text-base">{queue[0].name}</p>
+                                                    <p className="text-xs text-slate-300">{queue[0].serviceName} • ({queue[0].phone})</p>
+                                                </div>
+                                                <button 
+                                                    onClick={handleNextCustomer}
+                                                    className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 px-4 py-2 rounded-xl text-xs font-bold transition shadow-lg shadow-emerald-500/20 flex items-center gap-1.5"
+                                                >
+                                                    <i data-lucide="check" className="w-4 h-4"></i>
+                                                    إنهاء الخدمة
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <p className="text-sm text-slate-500 italic">لا يوجد زبائن حالياً في الطابور</p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* إدارة الطابور */}
+                                <div className="flex flex-col gap-3">
+                                    <h2 className="font-bold text-sm text-slate-200 flex items-center justify-between">
+                                        <span>إدارة طابور الزبائن</span>
+                                        <span className="bg-slate-800 text-amber-400 text-xs px-2.5 py-1 rounded-full border border-slate-700">
+                                            {queue.length} في الانتظار
+                                        </span>
+                                    </h2>
+                                    <div className="flex flex-col gap-2.5">
+                                        {queue.map((item, index) => (
+                                            <div key={item.id} className="bg-slate-800/40 border border-slate-700/60 rounded-xl p-3 flex items-center justify-between">
+                                                <div className="flex items-center gap-3">
+                                                    <span className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs ${index === 0 ? 'bg-amber-500 text-slate-950' : 'bg-slate-700 text-slate-300'}`}>
+                                                        #{index + 1}
+                                                    </span>
+                                                    <div>
+                                                        <h4 className="font-bold text-sm text-white">{item.name}</h4>
+                                                        <p className="text-xs text-slate-400">{item.serviceName} | {item.phone}</p>
+                                                    </div>
+                                                </div>
+                                                <button 
+                                                    onClick={() => handleRemoveFromQueue(item.id)}
+                                                    className="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-400 flex items-center justify-center hover:bg-rose-500/20 transition"
+                                                >
+                                                    <i data-lucide="trash-2" className="w-4 h-4"></i>
+                                                </button>
+                                            </div>
+                                        ))}
+                                        {queue.length === 0 && (
+                                            <div className="text-center py-8 bg-slate-800/20 border border-dashed border-slate-800 rounded-xl">
+                                                <p className="text-slate-500 text-sm">الطابور فارغ تماماً</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* الخدمات والأسعار */}
+                                <div className="flex flex-col gap-3">
+                                    <div className="flex justify-between items-center">
+                                        <h2 className="font-bold text-sm text-slate-200">إدارة الخدمات والأسعار</h2>
+                                        <button 
+                                            onClick={() => setShowAddServiceModal(true)}
+                                            className="bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1"
+                                        >
+                                            <i data-lucide="plus" className="w-3.5 h-3.5"></i>
+                                            خدمة جديدة
+                                        </button>
+                                    </div>
+
+                                    <div className="flex flex-col gap-2">
+                                        {servicesList.map(serv => (
+                                            <div key={serv.id} className="bg-slate-800/40 border border-slate-700/60 rounded-xl p-3 flex justify-between items-center">
+                                                <div>
+                                                    <h4 className="font-bold text-sm text-white">{serv.name}</h4>
+                                                    <p className="text-xs text-amber-400 font-medium">{serv.price} د.ج • {serv.duration} دقيقة</p>
+                                                </div>
+                                                <button 
+                                                    onClick={() => handleDeleteService(serv.id)}
+                                                    className="text-slate-500 hover:text-rose-400 transition p-1"
+                                                >
+                                                    <i data-lucide="trash-2" className="w-4 h-4"></i>
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* نافذة إضافة خدمة */}
+                                {showAddServiceModal && (
+                                    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                                        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 w-full max-w-sm flex flex-col gap-4 shadow-xl">
+                                            <h3 className="font-bold text-base text-white">إضافة خدمة جديدة</h3>
+                                            <form onSubmit={handleAddService} className="flex flex-col gap-3">
+                                                <div>
+                                                    <label className="text-xs text-slate-400 mb-1 block">اسم الخدمة</label>
+                                                    <input 
+                                                        type="text" 
+                                                        value={newServiceName}
+                                                        onChange={(e) => setNewServiceName(e.target.value)}
+                                                        placeholder="مثال: صبغة شعر"
+                                                        className="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-amber-500"
+                                                        required
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="text-xs text-slate-400 mb-1 block">السعر (د.ج)</label>
+                                                    <input 
+                                                        type="number" 
+                                                        value={newServicePrice}
+                                                        onChange={(e) => setNewServicePrice(e.target.value)}
+                                                        placeholder="500"
+                                                        className="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-amber-500"
+                                                        required
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="text-xs text-slate-400 mb-1 block">المدة التقديرية (بالدقائق)</label>
+                                                    <input 
+                                                        type="number" 
+                                                        value={newServiceDuration}
+                                                        onChange={(e) => setNewServiceDuration(e.target.value)}
+                                                        placeholder="20"
+                                                        className="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-amber-500"
+                                                    />
+                                                </div>
+                                                <div className="flex gap-2 mt-2">
+                                                    <button 
+                                                        type="button" 
+                                                        onClick={() => setShowAddServiceModal(false)}
+                                                        className="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 py-2.5 rounded-xl text-xs font-bold transition"
+                                                    >
+                                                        إلغاء
+                                                    </button>
+                                                    <button 
+                                                        type="submit" 
+                                                        className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 py-2.5 rounded-xl text-xs font-bold transition"
+                                                    >
+                                                        حفظ الخدمة
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            /* --- واجهة الزبون (العامة) --- */
+                            <div className="flex flex-col gap-5">
+                                {isShopOpen ? (
+                                    <div className="bg-gradient-to-br from-amber-500/10 to-transparent border border-amber-500/20 rounded-2xl p-5 flex flex-col gap-4">
+                                        <div>
+                                            <h2 className="font-bold text-lg text-white mb-1">احجز دورك الآن عن بُعد</h2>
+                                            <p className="text-xs text-slate-400">سجل معلوماتك واحصل على رقمك في الطابور دون الحاجة للانتظار داخل الصالون.</p>
+                                        </div>
+
+                                        <form onSubmit={handleJoinQueue} className="flex flex-col gap-3">
+                                            <div>
+                                                <label className="text-xs text-slate-300 mb-1 block font-medium">الاسم الكامل</label>
+                                                <input 
+                                                    type="text" 
+                                                    value={clientName}
+                                                    onChange={(e) => setClientName(e.target.value)}
+                                                    placeholder="أدخل اسمك هنا..."
+                                                    className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-amber-500 transition"
+                                                    required
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="text-xs text-slate-300 mb-1 block font-medium">رقم الهاتف</label>
+                                                <input 
+                                                    type="tel" 
+                                                    value={clientPhone}
+                                                    onChange={(e) => setClientPhone(e.target.value)}
+                                                    placeholder="05XXXXXXXX"
+                                                    className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-amber-500 transition"
+                                                    required
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="text-xs text-slate-300 mb-1 block font-medium">اختر الخدمة المطلوبة</label>
+                                                <select 
+                                                    value={selectedService}
+                                                    onChange={(e) => setSelectedService(e.target.value)}
+                                                    className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-amber-500 transition"
+                                                >
+                                                    {servicesList.map(serv => (
+                                                        <option key={serv.id} value={serv.id}>
+                                                            {serv.name} — {serv.price} د.ج ({serv.duration} دقيقة)
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+
+                                            <button 
+                                                type="submit"
+                                                className="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3.5 rounded-xl transition shadow-lg shadow-amber-500/20 text-sm mt-2"
+                                            >
+                                                تأكيد الحجز والدخول في الطابور
+                                            </button>
+                                        </form>
+                                    </div>
+                                ) : (
+                                    <div className="bg-rose-500/10 border border-rose-500/20 rounded-2xl p-6 text-center flex flex-col items-center gap-2">
+                                        <i data-lucide="lock" className="w-8 h-8 text-rose-400"></i>
+                                        <h3 className="font-bold text-white text-base">الصالون مغلق حالياً</h3>
+                                        <p className="text-xs text-slate-400">نعتذر عن استقبال أي حجز جديد في الوقت الحالي. ننتظركم قريباً!</p>
+                                    </div>
+                                )}
+
+                                {/* حالة حجزي الخاص إذا كنت مسجلاً */}
+                                {myBooking && (
+                                    <div className="bg-slate-800/80 border border-amber-500/40 rounded-2xl p-4 flex flex-col gap-3">
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-xs font-bold text-amber-400 flex items-center gap-1">
+                                                <i data-lucide="bell" className="w-3.5 h-3.5"></i>
+                                                حجزك النشط حالياً
+                                            </span>
+                                            <button 
+                                                onClick={() => handleRemoveFromQueue(myBooking.id)}
+                                                className="text-rose-400 text-xs hover:underline"
+                                            >
+                                                إلغاء الحجز
+                                            </button>
+                                        </div>
+                                        <div className="bg-slate-900 rounded-xl p-3 border border-slate-700 flex justify-between items-center">
+                                            <div>
+                                                <p className="font-bold text-white text-sm">{myBooking.name}</p>
+                                                <p className="text-xs text-slate-400">{myBooking.serviceName}</p>
+                                            </div>
+                                            <div className="text-left">
+                                                <span className="text-xs text-slate-400 block">ترتيبك في الطابور</span>
+                                                <span className="font-black text-amber-400 text-lg">
+                                                    #{queue.findIndex(q => q.id === myBooking.id) + 1}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* عرض طابور الانتظار للزبائن */}
+                                <div className="flex flex-col gap-3">
+                                    <h2 className="font-bold text-sm text-slate-200 flex justify-between items-center">
+                                        <span>حالة الطابور الحالي</span>
+                                        <span className="text-xs text-slate-400">{queue.length} أشخاص ينتظرون</span>
+                                    </h2>
+                                    <div className="flex flex-col gap-2">
+                                        {queue.map((item, index) => (
+                                            <div key={item.id} className="bg-slate-800/40 border border-slate-700/60 rounded-xl p-3 flex items-center justify-between">
+                                                <div className="flex items-center gap-3">
+                                                    <span className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs ${index === 0 ? 'bg-amber-500 text-slate-950' : 'bg-slate-700 text-slate-300'}`}>
+                                                        #{index + 1}
+                                                    </span>
+                                                    <div>
+                                                        <h4 className="font-bold text-sm text-white">{item.name}</h4>
+                                                        <p className="text-xs text-slate-400">{item.serviceName}</p>
+                                                    </div>
+                                                </div>
+                                                <span className="text-xs text-slate-500 font-medium">
+                                                    {index === 0 ? 'على الكرسي حالياً' : `انتظار (~${index * 20}د)`}
+                                                </span>
+                                            </div>
+                                        ))}
+                                        {queue.length === 0 && (
+                                            <div className="text-center py-8 bg-slate-800/20 border border-dashed border-slate-800 rounded-xl">
+                                                <p className="text-slate-500 text-sm">لا يوجد أحد حالياً، الكرسي فارغ!</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </main>
+
+                    {/* التذييل */}
+                    <footer className="text-center py-4 border-t border-slate-800 text-xs text-slate-500">
+                        صالون أكرم للحلاقة &copy; 2026
+                    </footer>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<BarberApp />, document.getElementById('root'));
+        setTimeout(() => lucide.createIcons(), 100);
+    </script>
+</body>
+</html>
