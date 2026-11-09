@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>صالون أكرم للحلاقة - Barber Akram</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { 
+      font-family: 'Tajawal', sans-serif; 
+      background-color: #030712; 
+      color: #f3f4f6;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(245, 158, 11, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(245, 158, 11, 0.05) 0%, transparent 40%);
+      background-attachment: fixed;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 flex flex-col justify-between">
+
+  <div class="max-w-md mx-auto w-full flex-1 flex flex-col justify-between">
+    
+    <!-- الهيدر -->
+    <header class="flex justify-between items-center mb-6 bg-gray-900/90 backdrop-blur-md p-4 rounded-2xl border border-gray-800 shadow-xl">
+      <div>
+        <h1 class="text-xl font-bold text-amber-400 tracking-wide">صالون أكرم للحلاقة</h1>
+        <p class="text-xs text-gray-400">مزلوق، سطيف</p>
+      </div>
+      <button onclick="switchView()" id="viewBtn" class="px-3.5 py-2 bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold text-xs rounded-xl transition shadow-lg shadow-amber-500/10">
+        لوحة الحلاق
+      </button>
+    </header>
+
+    <!-- المحتوى الأساسي -->
+    <main class="flex-1 space-y-6">
+      
+      <!-- حالة الصالون -->
+      <div id="shopStatusBanner" class="p-3.5 rounded-xl text-center text-sm font-bold flex items-center justify-center gap-2.5 bg-emerald-950/90 backdrop-blur border border-emerald-800/80 text-emerald-400 shadow-lg">
+        <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span id="shopStatusText">الصالون مفتوح ويستقبل الزبائن</span>
+      </div>
+
+      <!-- واجهة الزبون -->
+      <div id="clientView" class="space-y-6">
+        
+        <!-- قائمة الأسعار والخدمات -->
+        <div class="bg-gray-900/80 backdrop-blur-md p-4 rounded-2xl border border-gray-800/80 text-xs space-y-3 shadow-xl">
+          <h3 class="font-bold text-amber-400 text-sm mb-2 flex items-center gap-1.5">
+            <span>📋</span> قائمة الخدمات والأسعار:
+          </h3>
+          <div class="grid grid-cols-2 gap-2 text-gray-300">
+            <div class="flex justify-between bg-gray-950/60 p-2.5 rounded-xl border border-gray-800/50"><span>حلاقة كبار:</span><span class="text-amber-400 font-bold">300 دج</span></div>
+            <div class="flex justify-between bg-gray-950/60 p-2.5 rounded-xl border border-gray-800/50"><span>حلاقة صغار:</span><span class="text-amber-400 font-bold">250 دج</span></div>
+            <div class="flex justify-between bg-gray-950/60 p-2.5 rounded-xl border border-gray-800/50"><span>حلاقة الذقن:</span><span class="text-amber-400 font-bold">100 دج</span></div>
+            <div class="flex justify-between bg-gray-950/60 p-2.5 rounded-xl border border-gray-800/50"><span>تور دو راي:</span><span class="text-amber-400 font-bold">150 دج</span></div>
+            <div class="flex justify-between bg-gray-950/60 p-2.5 rounded-xl border border-gray-800/50"><span>سوشوار وليسور:</span><span class="text-amber-400 font-bold">150 دج</span></div>
+            <div class="flex justify-between bg-gray-950/60 p-2.5 rounded-xl border border-gray-800/50"><span>ماسك وجه:</span><span class="text-amber-400 font-bold">200 دج</span></div>
+            <div class="col-span-2 flex justify-between bg-gray-950/60 p-2.5 rounded-xl border border-gray-800/50"><span>بروتين:</span><span class="text-amber-400 font-bold">1000 دج</span></div>
+          </div>
+        </div>
+
+        <!-- نموذج الحجز -->
+        <form onsubmit="bookClient(event)" class="bg-gray-900/80 backdrop-blur-md p-5 rounded-2xl border border-gray-800/80 space-y-4 shadow-xl">
+          <h2 class="text-lg font-bold text-gray-100 mb-2">حجز دور جديد</h2>
+          <div>
+            <label class="block text-xs font-medium text-gray-400 mb-1.5">الاسم الكامل *</label>
+            <input type="text" id="clientName" required placeholder="أدخل اسمك الكريم" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-amber-500 text-gray-100 shadow-inner">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-400 mb-1.5">رقم الهاتف (لإرسال تنبيه الواتساب) *</label>
+            <input type="tel" id="clientPhone" required placeholder="06XXXXXXXX" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-amber-500 text-gray-100 shadow-inner">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-400 mb-1.5">الخدمة المطلوبة</label>
+            <select id="clientService" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-amber-500 text-gray-100 shadow-inner">
+              <option value="حلاقة شعر كبار (300 دج)">حلاقة شعر كبار - 300 دج</option>
+              <option value="حلاقة شعر صغار (250 دج)">حلاقة شعر صغار - 250 دج</option>
+              <option value="حلاقة الذقن (100 دج)">حلاقة الذقن - 100 دج</option>
+              <option value="تور دو راي (150 دج)">تور دو راي - 150 دج</option>
+              <option value="سوشوار وليسور (150 دج)">سوشوار وليسور - 150 دج</option>
+              <option value="بروتين (1000 دج)">بروتين - 1000 دج</option>
+              <option value="ماسك وجه (200 دج)">ماسك وجه - 200 دج</option>
+            </select>
+          </div>
+          <button type="submit" id="bookBtn" class="w-full bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold py-3.5 rounded-xl text-sm transition shadow-lg shadow-amber-500/20">
+            تأكيد الحجز والدخول للطابور
+          </button>
+        </form>
+
+        <!-- قائمة المنتظرين -->
+        <div class="bg-gray-900/80 backdrop-blur-md p-5 rounded-2xl border border-gray-800/80 shadow-xl">
+          <h2 class="text-lg font-bold text-gray-100 mb-4 flex justify-between items-center">
+            <span>قائمة المنتظرين</span>
+            <span id="queueCount" class="text-xs bg-gray-800 text-amber-400 px-3 py-1 rounded-full border border-gray-700">0 في الطابور</span>
+          </h2>
+          <div id="queueList" class="space-y-2.5">
+            <p class="text-center text-gray-500 text-sm py-4">جاري تحميل الطابور...</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- واجهة الحلاق -->
+      <div id="adminView" class="hidden space-y-6">
+        
+        <!-- تسجيل الدخول بالرمز -->
+        <div id="adminLoginBox" class="bg-gray-900/80 backdrop-blur-md p-6 rounded-2xl border border-gray-800/80 space-y-4 text-center shadow-xl">
+          <h2 class="text-lg font-bold text-gray-100">رمز الدخول لوحة الحلاق</h2>
+          <input type="password" id="pinInput" maxlength="6" placeholder="أدخل الرمز السري" class="w-full text-center bg-gray-950 border border-gray-800 rounded-xl p-3.5 text-lg focus:outline-none focus:border-amber-500 text-gray-100 shadow-inner">
+          <p id="pinError" class="text-xs text-rose-500 hidden mt-2">الرمز السري غير صحيح!</p>
+          <button onclick="checkPin()" class="w-full mt-3 bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold py-3 rounded-xl text-sm transition shadow-lg shadow-amber-500/20">
+            دخول للوحة التحكم
+          </button>
+        </div>
+
+        <!-- لوحة التحكم -->
+        <div id="adminDashboard" class="hidden space-y-6">
+          <div class="bg-gray-900/80 backdrop-blur-md p-4 rounded-2xl border border-gray-800/80 flex justify-between items-center shadow-xl">
+            <span class="text-sm font-semibold">حالة الاستقبال:</span>
+            <button onclick="toggleShopOpenStatus()" id="shopToggleBtn" class="px-4 py-2 rounded-xl text-xs font-bold transition bg-rose-600 hover:bg-rose-700 text-white shadow">
+              إغلاق الاستقبال
+            </button>
+          </div>
+
+          <!-- إضافة يدوية للشيوخ والأطفال -->
+          <form onsubmit="manualAddClient(event)" class="bg-gray-900/80 backdrop-blur-md p-5 rounded-2xl border border-gray-800/80 space-y-3 shadow-xl">
+            <h3 class="text-sm font-bold text-amber-400">➕ إضافة زبون مباشر (شيوخ / أطفال)</h3>
+            <input type="text" id="manualName" required placeholder="اسم الزبون (مثال: عمي أحمد)" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-2.5 text-xs text-gray-100 focus:outline-none focus:border-amber-500 shadow-inner">
+            <div class="flex gap-2">
+              <select id="manualService" class="flex-1 bg-gray-950 border border-gray-800 rounded-xl p-2.5 text-xs text-gray-100 shadow-inner">
+                <option value="حلاقة شعر كبار (300 دج)">حلاقة شعر كبار - 300 دج</option>
+                <option value="حلاقة شعر صغار (250 دج)">حلاقة شعر صغار - 250 دج</option>
+                <option value="حلاقة الذقن (100 دج)">حلاقة الذقن - 100 دج</option>
+                <option value="تور دو راي (150 دج)">تور دو راي - 150 دج</option>
+                <option value="سوشوار وليسور (150 دج)">سوشوار وليسور - 150 دج</option>
+                <option value="بروتين (1000 دج)">بروتين - 1000 دج</option>
+                <option value="ماسك وجه (200 دج)">ماسك وجه - 200 دج</option>
+              </select>
+              <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition shadow">
+                إضافة
+              </button>
+            </div>
+          </form>
+
+          <!-- إدارة الطابور للحلاق -->
+          <div class="bg-gray-900/80 backdrop-blur-md p-5 rounded-2xl border border-gray-800/80 space-y-3 shadow-xl">
+            <h2 class="text-lg font-bold text-gray-100 mb-2">إدارة الطابور النشط (مع إشعارات الواتساب)</h2>
+            <div id="adminQueueList" class="space-y-2.5">
+              <p class="text-center text-gray-500 text-sm py-4">الطابور فارغ.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- التذييل -->
+    <footer class="mt-8 text-center text-xs text-gray-500 border-t border-gray-900/80 pt-4">
+      صالون أكرم للحلاقة - مزلوق، سطيف &copy; 2026
+    </footer>
+
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAI3L5P-JG7yAbqlgLl",
+      authDomain: "barber-kimou.firebaseapp.com",
+      projectId: "barber-kimou",
+      storageBucket: "barber-kimou.firebasestorage.app",
+      messagingSenderId: "360525898197",
+      appId: "1:360525898197:web:f55b81"
+    };
+
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.firestore();
+
+    const ADMIN_PIN = "200319";
+    const MINUTES_PER_CLIENT = 35;
+    let isShopOpen = true;
+    let isAdminAuthenticated = false;
+    let currentQueue = [];
+
+    // التحديث التلقائي للوقت كل ثانية
+    setInterval(() => {
+      renderUI();
+    }, 1000);
+
+    db.collection('queue').orderBy('createdAt', 'asc').onSnapshot(snapshot => {
+      currentQueue = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      renderUI();
+    }, error => {
+      console.error("Error fetching queue: ", error);
+    });
+
+    db.collection('settings').doc('shopStatus').onSnapshot(doc => {
+      if (doc.exists) {
+        isShopOpen = doc.data().isOpen;
+        renderShopStatus();
+      } else {
+        db.collection('settings').doc('shopStatus').set({ isOpen: true });
+      }
+    });
+
+    function renderShopStatus() {
+      const banner = document.getElementById('shopStatusBanner');
+      const text = document.getElementById('shopStatusText');
+      const bookBtn = document.getElementById('bookBtn');
+      const toggleBtn = document.getElementById('shopToggleBtn');
+
+      if (isShopOpen) {
+        if (banner) banner.className = "p-3.5 rounded-xl text-center text-sm font-bold flex items-center justify-center gap-2.5 bg-emerald-950/90 backdrop-blur border border-emerald-800/80 text-emerald-400 shadow-lg";
+        if (text) text.innerText = "الصالون مفتوح ويستقبل الزبائن";
+        if (bookBtn) bookBtn.disabled = false;
+        if (toggleBtn) {
+          toggleBtn.className = "px-4 py-2 rounded-xl text-xs font-bold transition bg-rose-600 hover:bg-rose-700 text-white shadow";
+          toggleBtn.innerText = "إغلاق الاستقبال";
+        }
+      } else {
+        if (banner) banner.className = "p-3.5 rounded-xl text-center text-sm font-bold flex items-center justify-center gap-2.5 bg-rose-950/90 backdrop-blur border border-rose-800/80 text-rose-400 shadow-lg";
+        if (text) text.innerText = "الصالون مغلق حالياً";
+        if (bookBtn) bookBtn.disabled = true;
+        if (toggleBtn) {
+          toggleBtn.className = "px-4 py-2 rounded-xl text-xs font-bold transition bg-emerald-600 hover:bg-emerald-700 text-white shadow";
+          toggleBtn.innerText = "فتح الاستقبال";
+        }
+      }
+    }
+
+    // حساب العداد التنازلي المحلي الفوري
+    function formatRemainingTime(startedAtTime, extraMinutesBefore = 0) {
+      if (!startedAtTime) return `${extraMinutesBefore + MINUTES_PER_CLIENT} دقيقة`;
+      
+      const startTime = typeof startedAtTime === 'number' ? startedAtTime : (startedAtTime.toMillis ? startedAtTime.toMillis() : new Date(startedAtTime).getTime());
+      const totalServiceMs = MINUTES_PER_CLIENT * 60 * 1000;
+      const elapsedTimeMs = Date.now() - startTime;
+      const remainingMs = totalServiceMs - elapsedTimeMs + (extraMinutesBefore * 60 * 1000);
+
+      if (remainingMs <= 0) return "حان الدور!";
+
+      const totalSec = Math.floor(remainingMs / 1000);
+      const mins = Math.floor(totalSec / 60);
+      const secs = totalSec % 60;
+      
+      return `${mins}د ${secs < 10 ? '0' : ''}${secs}ث`;
+    }
+
+    function renderUI() {
+      const queueCount = document.getElementById('queueCount');
+      const queueList = document.getElementById('queueList');
+      if (queueCount) queueCount.innerText = currentQueue.length + " في الطابور";
+
+      const inProgressClient = currentQueue.find(item => item.status === 'in-progress');
+
+      if (queueList) {
+        if (currentQueue.length === 0) {
+          queueList.innerHTML = `<p class="text-center text-gray-500 text-sm py-4">لا يوجد زبائن في الانتظار حالياً.</p>`;
+        } else {
+          let html = '';
+          let waitingIndexCounter = 0;
+
+          currentQueue.forEach((item, index) => {
+            const isInProgress = item.status === 'in-progress';
+            let timeDisplay = '';
+
+            if (isInProgress) {
+              const remainingStr = formatRemainingTime(item.startedAt, 0);
+              timeDisplay = `<span class="text-xs font-bold text-amber-400 bg-amber-400/20 px-2.5 py-1 rounded-lg border border-amber-500/30">على الكرسي (${remainingStr})</span>`;
+            } else {
+              if (inProgressClient && inProgressClient.startedAt) {
+                const estStr = formatRemainingTime(inProgressClient.startedAt, waitingIndexCounter * MINUTES_PER_CLIENT);
+                timeDisplay = `<div class="text-xs text-gray-400">متبقي: <strong class="text-amber-400">${estStr}</strong></div>`;
+              } else {
+                const estMins = waitingIndexCounter * MINUTES_PER_CLIENT;
+                timeDisplay = `<div class="text-xs text-gray-400">انتظار: <strong class="text-amber-400">${estMins} دقيقة</strong></div>`;
+              }
+              waitingIndexCounter++;
+            }
+
+            html += `
+              <div class="p-3.5 rounded-xl flex items-center justify-between border ${isInProgress ? 'bg-amber-500/15 border-amber-500/60 shadow-lg shadow-amber-500/5' : 'bg-gray-950/60 border-gray-800/60'}">
+                <div class="flex items-center gap-3">
+                  <span class="w-7 h-7 rounded-full bg-gray-800 text-amber-400 flex items-center justify-center font-bold text-xs border border-gray-700">#${index + 1}</span>
+                  <div>
+                    <p class="font-semibold text-sm text-gray-200">${item.name}</p>
+                    <p class="text-xs text-gray-400">${item.service}</p>
+                  </div>
+                </div>
+                <div class="text-left">
+                  ${timeDisplay}
+                </div>
+              </div>
+            `;
+          });
+
+          queueList.innerHTML = html;
+        }
+      }
+
+      if (isAdminAuthenticated) {
+        const adminQueueList = document.getElementById('adminQueueList');
+        if (adminQueueList) {
+          if (currentQueue.length === 0) {
+            adminQueueList.innerHTML = `<p class="text-center text-gray-500 text-sm py-4">الطابور فارغ.</p>`;
+          } else {
+            adminQueueList.innerHTML = currentQueue.map((item, index) => {
+              const isInProgress = item.status === 'in-progress';
+              let cleanPhone = (item.phone || '').replace(/[^0-9]/g, '');
+              if (cleanPhone.startsWith('0')) {
+                cleanPhone = '213' + cleanPhone.substring(1);
+              }
+              const waMsg = encodeURIComponent(`مرحباً ${item.name}، لقد اقترب دورك في صالون أكرم للحلاقة (مزلوق، سطيف). يرجى التوجه إلى الصالون الآن!`);
+              const waLink = cleanPhone ? `https://wa.me/${cleanPhone}?text=${waMsg}` : '#';
+
+              let remainingTextAdmin = '';
+              if (isInProgress && item.startedAt) {
+                remainingTextAdmin = ` (${formatRemainingTime(item.startedAt, 0)})`;
+              }
+
+              return `
+                <div class="p-3.5 bg-gray-950/70 rounded-xl border border-gray-800/70 flex flex-col gap-2.5 shadow-md">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <span class="text-xs font-bold text-amber-400">#${index + 1}</span>
+                      <h3 class="font-bold text-gray-200 text-sm">${item.name}</h3>
+                      <p class="text-xs text-gray-400">الهاتف: ${item.phone || 'بدون رقم'}</p>
+                      <p class="text-xs text-gray-400 mt-1">${item.service}</p>
+                    </div>
+                    <span class="text-xs px-2.5 py-0.5 rounded-md border ${isInProgress ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' : 'bg-gray-800/80 text-gray-400 border-gray-700'}">
+                      ${isInProgress ? 'على الكرسي' + remainingTextAdmin : 'في الانتظار'}
+                    </span>
+                  </div>
+                  <div class="flex flex-wrap gap-2 pt-2 border-t border-gray-900">
+                    ${!isInProgress ? `<button onclick="changeStatus('${item.id}', 'in-progress')" class="flex-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 text-xs font-bold py-2 rounded-lg border border-amber-500/30 transition">استدعاء</button>` : ''}
+                    <a href="${waLink}" target="_blank" class="flex-1 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 text-xs font-bold py-2 text-center rounded-lg border border-emerald-600/30 transition">تنبيه واتساب</a>
+                    <button onclick="changeStatus('${item.id}', 'deleted')" class="flex-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 text-xs font-bold py-2 rounded-lg border border-rose-500/30 transition">إنهاء / حذف</button>
+                  </div>
+                </div>
+              `;
+            }).join('');
+          }
+        }
+      }
+    }
+
+    async function bookClient(e) {
+      e.preventDefault();
+      const name = document.getElementById('clientName').value;
+      const phone = document.getElementById('clientPhone').value;
+      const service = document.getElementById('clientService').value;
+
+      if (!isShopOpen) {
+        alert('الصالون مغلق حالياً، لا يمكن الحجز الآن.');
+        return;
+      }
+
+      try {
+        await db.collection('queue').add({
+          name: name,
+          phone: phone,
+          service: service,
+          status: 'waiting',
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        document.getElementById('clientName').value = '';
+        document.getElementById('clientPhone').value = '';
+        alert('تم تسجيل حضورك في الطابور بنجاح!');
+      } catch (err) {
+        console.error(err);
+        alert('حدث خطأ أثناء الحجز، يرجى المحاولة مرة أخرى.');
+      }
+    }
+
+    async function manualAddClient(e) {
+      e.preventDefault();
+      const name = document.getElementById('manualName').value;
+      const service = document.getElementById('manualService').value;
+
+      try {
+        await db.collection('queue').add({
+          name: name + ' (مباشر)',
+          phone: '0600000000',
+          service: service,
+          status: 'waiting',
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        document.getElementById('manualName').value = '';
+        alert('تمت إضافة الزبون للطابور بنجاح!');
+      } catch (err) {
+        console.error(err);
+        alert('حدث خطأ أثناء الإضافة.');
+      }
+    }
+
+    async function changeStatus(id, status) {
+      try {
+        if (status === 'deleted') {
+          await db.collection('queue').doc(id).delete();
+        } else if (status === 'in-progress') {
+          // تسجيل التوقيت المحلي الفوري لمنع تأخر العداد
+          await db.collection('queue').doc(id).update({ 
+            status: status,
+            startedAt: Date.now()
+          });
+        } else {
+          await db.collection('queue').doc(id).update({ status });
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function toggleShopOpenStatus() {
+      try {
+        await db.collection('settings').doc('shopStatus').set({ isOpen: !isShopOpen });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function switchView() {
+      const clientView = document.getElementById('clientView');
+      const adminView = document.getElementById('adminView');
+      const viewBtn = document.getElementById('viewBtn');
+
+      if (clientView && adminView && viewBtn) {
+        if (clientView.classList.contains('hidden')) {
+          clientView.classList.remove('hidden');
+          adminView.classList.add('hidden');
+          viewBtn.innerText = "لوحة الحلاق";
+          viewBtn.className = "px-3.5 py-2 bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold text-xs rounded-xl transition shadow-lg shadow-amber-500/10";
+        } else {
+          clientView.classList.add('hidden');
+          adminView.classList.remove('hidden');
+          viewBtn.innerText = "واجهة الزبون";
+          viewBtn.className = "px-3.5 py-2 bg-gray-800 hover:bg-gray-700 text-amber-400 font-bold text-xs rounded-xl transition border border-gray-700 shadow";
+        }
+      }
+    }
+
+    function checkPin() {
+      const pinInput = document.getElementById('pinInput');
+      const error = document.getElementById('pinError');
+      const loginBox = document.getElementById('adminLoginBox');
+      const dashboard = document.getElementById('adminDashboard');
+
+      if (pinInput && error && loginBox && dashboard) {
+        if (pinInput.value === ADMIN_PIN) {
+          isAdminAuthenticated = true;
+          loginBox.classList.add('hidden');
+          dashboard.classList.remove('hidden');
+          error.classList.add('hidden');
+          renderUI();
+        } else {
+          error.classList.remove('hidden');
+        }
+      }
+    }
+  </script>
+</body>
+</html>
