@@ -89,7 +89,7 @@
           </button>
         </form>
 
-        <!-- قائمة المنتظرين للزبون -->
+        <!-- قائمة المنتظرين للزبون مع العد التنازلي الحقيقي -->
         <div class="bg-gray-900/80 backdrop-blur-md p-5 rounded-2xl border border-gray-800/80 shadow-xl">
           <h2 class="text-lg font-bold text-gray-100 mb-4 flex justify-between items-center">
             <span>قائمة المنتظرين</span>
@@ -189,6 +189,11 @@
     let isAdminAuthenticated = false;
     let currentQueue = [];
 
+    // التحديث التلقائي للوقت كل ثانية
+    setInterval(() => {
+      renderUI();
+    }, 1000);
+
     db.collection('queue').orderBy('createdAt', 'asc').onSnapshot(snapshot => {
       currentQueue = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       renderUI();
@@ -230,19 +235,59 @@
       }
     }
 
+    // حساب العداد التنازلي بدقة
+    function formatRemainingTime(startedAtTimestamp, extraMinutesBefore = 0) {
+      if (!startedAtTimestamp) return `${extraMinutesBefore} دقيقة`;
+      
+      const startTime = startedAtTimestamp.toDate ? startedAtTimestamp.toDate().getTime() : new Date(startedAtTimestamp).getTime();
+      const totalServiceMs = MINUTES_PER_CLIENT * 60 * 1000;
+      const elapsedTimeMs = Date.now() - startTime;
+      const remainingMs = totalServiceMs - elapsedTimeMs + (extraMinutesBefore * 60 * 1000);
+
+      if (remainingMs <= 0) return "حان الدور الآن!";
+
+      const totalSec = Math.floor(remainingMs / 1000);
+      const mins = Math.floor(totalSec / 60);
+      const secs = totalSec % 60;
+      
+      return `${mins} د و ${secs < 10 ? '0' : ''}${secs} ث`;
+    }
+
     function renderUI() {
       const queueCount = document.getElementById('queueCount');
       const queueList = document.getElementById('queueList');
       if (queueCount) queueCount.innerText = currentQueue.length + " في الطابور";
 
+      // البحث عن الزبون الموجود على الكرسي الآن
+      const inProgressClient = currentQueue.find(item => item.status === 'in-progress');
+      const waitingQueue = currentQueue.filter(item => item.status !== 'in-progress');
+
       if (queueList) {
         if (currentQueue.length === 0) {
           queueList.innerHTML = `<p class="text-center text-gray-500 text-sm py-4">لا يوجد زبائن في الانتظار حالياً.</p>`;
         } else {
-          queueList.innerHTML = currentQueue.map((item, index) => {
-            const estTime = index * MINUTES_PER_CLIENT;
+          let html = '';
+          let waitingIndexCounter = 0;
+
+          currentQueue.forEach((item, index) => {
             const isInProgress = item.status === 'in-progress';
-            return `
+            let timeDisplay = '';
+
+            if (isInProgress) {
+              const remainingStr = formatRemainingTime(item.startedAt, 0);
+              timeDisplay = `<span class="text-xs font-bold text-amber-400 bg-amber-400/20 px-2.5 py-1 rounded-lg border border-amber-500/30 animate-pulse">على الكرسي (${remainingStr}) ✂️</span>`;
+            } else {
+              if (inProgressClient && inProgressClient.startedAt) {
+                const estStr = formatRemainingTime(inProgressClient.startedAt, waitingIndexCounter * MINUTES_PER_CLIENT);
+                timeDisplay = `<div class="text-xs text-gray-400">متبقي: <strong class="text-amber-400">${estStr}</strong></div>`;
+              } else {
+                const estMins = waitingIndexCounter * MINUTES_PER_CLIENT;
+                timeDisplay = `<div class="text-xs text-gray-400">انتظار: <strong class="text-amber-400">${estMins} دقيقة</strong></div>`;
+              }
+              waitingIndexCounter++;
+            }
+
+            html += `
               <div class="p-3.5 rounded-xl flex items-center justify-between border ${isInProgress ? 'bg-amber-500/15 border-amber-500/60 shadow-lg shadow-amber-500/5' : 'bg-gray-950/60 border-gray-800/60'}">
                 <div class="flex items-center gap-3">
                   <span class="w-7 h-7 rounded-full bg-gray-800 text-amber-400 flex items-center justify-center font-bold text-xs border border-gray-700">#${index + 1}</span>
@@ -252,11 +297,13 @@
                   </div>
                 </div>
                 <div class="text-left">
-                  ${isInProgress ? '<span class="text-xs font-bold text-amber-400 bg-amber-400/20 px-2.5 py-1 rounded-lg border border-amber-500/30">على الكرسي ✂️</span>' : `<div class="text-xs text-gray-400">انتظار: <strong class="text-amber-400">${estTime} دقيقة</strong></div>`}
+                  ${timeDisplay}
                 </div>
               </div>
             `;
-          }).join('');
+          });
+
+          queueList.innerHTML = html;
         }
       }
 
@@ -275,6 +322,11 @@
               const waMsg = encodeURIComponent(`مرحباً ${item.name}، لقد اقترب دورك في صالون أكرم للحلاقة (مزلوق، سطيف). يرجى التوجه إلى الصالون الآن! ✂️`);
               const waLink = cleanPhone ? `https://wa.me/${cleanPhone}?text=${waMsg}` : '#';
 
+              let remainingTextAdmin = '';
+              if (isInProgress && item.startedAt) {
+                remainingTextAdmin = ` - المتبقي: (${formatRemainingTime(item.startedAt, 0)})`;
+              }
+
               return `
                 <div class="p-3.5 bg-gray-950/70 rounded-xl border border-gray-800/70 flex flex-col gap-2.5 shadow-md">
                   <div class="flex justify-between items-start">
@@ -285,7 +337,7 @@
                       <p class="text-xs text-gray-400 mt-1">${item.service}</p>
                     </div>
                     <span class="text-xs px-2.5 py-0.5 rounded-md border ${isInProgress ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' : 'bg-gray-800/80 text-gray-400 border-gray-700'}">
-                      ${isInProgress ? 'قيد الحلاقة' : 'في الانتظار'}
+                      ${isInProgress ? 'قيد الحلاقة' + remainingTextAdmin : 'في الانتظار'}
                     </span>
                   </div>
                   <div class="flex flex-wrap gap-2 pt-2 border-t border-gray-900">
@@ -354,6 +406,12 @@
       try {
         if (status === 'deleted') {
           await db.collection('queue').doc(id).delete();
+        } else if (status === 'in-progress') {
+          // حفظ توقيت بدء الحلاقة لحظياً لحساب العد التنازلي
+          await db.collection('queue').doc(id).update({ 
+            status: status,
+            startedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
         } else {
           await db.collection('queue').doc(id).update({ status });
         }
