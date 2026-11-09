@@ -1,585 +1,694 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>صالون أكرم للحلاقة - Barber Akram</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <style>
-    body { 
-      font-family: 'Tajawal', sans-serif; 
-      background-color: #030712; 
-      color: #f3f4f6;
-      background-image: 
-        radial-gradient(circle at 10% 20%, rgba(245, 158, 11, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(245, 158, 11, 0.05) 0%, transparent 40%);
-      background-attachment: fixed;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barber Akram</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+body{font-family:'Tajawal',sans-serif;background:#030712;color:#f3f4f6;background-image:radial-gradient(circle at 10% 20%,rgba(245,158,11,.08),transparent 40%),radial-gradient(circle at 90% 80%,rgba(245,158,11,.05),transparent 40%);background-attachment:fixed}
+input,select,button{font-family:inherit}
+button:disabled{opacity:.5;cursor:not-allowed}
+</style>
 </head>
-<body class="min-h-screen p-4 flex flex-col justify-between">
+<body class="min-h-screen p-4">
+<div class="max-w-md mx-auto">
 
-  <div class="max-w-md mx-auto w-full flex-1 flex flex-col justify-between">
-    
-    <!-- الهيدر -->
-    <header class="flex justify-between items-center mb-6 bg-gray-900/90 backdrop-blur-md p-4 rounded-2xl border border-gray-800 shadow-xl">
-      <div>
-        <h1 class="text-xl font-bold text-amber-400 tracking-wide">صالون أكرم للحلاقة</h1>
-        <p class="text-xs text-gray-400">مزلوق، سطيف</p>
-      </div>
-      <button onclick="switchView()" id="viewBtn" class="px-3.5 py-2 bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold text-xs rounded-xl transition shadow-lg shadow-amber-500/10">
-        لوحة الحلاق
-      </button>
-    </header>
+<header class="flex justify-between items-center mb-6 bg-gray-900/90 p-4 rounded-2xl border border-gray-800">
+  <div>
+    <h1 class="text-xl font-bold text-amber-400">صالون أكرم للحلاقة</h1>
+    <p class="text-xs text-gray-400">مزلوق، سطيف</p>
+  </div>
+  <button onclick="switchView()" id="viewBtn" class="px-3 py-2 bg-amber-500 text-gray-950 font-bold text-xs rounded-xl">لوحة الحلاق</button>
+</header>
 
-    <!-- المحتوى الأساسي -->
-    <main class="flex-1 space-y-6">
-      
-      <!-- حالة الصالون -->
-      <div id="shopStatusBanner" class="p-3.5 rounded-xl text-center text-sm font-bold flex items-center justify-center gap-2.5 bg-emerald-950/90 backdrop-blur border border-emerald-800/80 text-emerald-400 shadow-lg">
-        <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span id="shopStatusText">الصالون مفتوح ويستقبل الزبائن</span>
-      </div>
+<main class="space-y-6">
 
-      <!-- واجهة الزبون -->
-      <div id="clientView" class="space-y-6">
-        
-        <!-- قائمة الأسعار والخدمات -->
-        <div class="bg-gray-900/80 backdrop-blur-md p-4 rounded-2xl border border-gray-800/80 text-xs space-y-3 shadow-xl">
-          <h3 class="font-bold text-amber-400 text-sm mb-2 flex items-center gap-1.5">
-            <span>📋</span> قائمة الخدمات والأسعار:
-          </h3>
-          <div class="grid grid-cols-2 gap-2 text-gray-300">
-            <div class="flex justify-between bg-gray-950/60 p-2.5 rounded-xl border border-gray-800/50"><span>حلاقة كبار:</span><span class="text-amber-400 font-bold">300 دج</span></div>
-            <div class="flex justify-between bg-gray-950/60 p-2.5 rounded-xl border border-gray-800/50"><span>حلاقة صغار:</span><span class="text-amber-400 font-bold">250 دج</span></div>
-            <div class="flex justify-between bg-gray-950/60 p-2.5 rounded-xl border border-gray-800/50"><span>حلاقة الذقن:</span><span class="text-amber-400 font-bold">100 دج</span></div>
-            <div class="flex justify-between bg-gray-950/60 p-2.5 rounded-xl border border-gray-800/50"><span>تور دو راي:</span><span class="text-amber-400 font-bold">150 دج</span></div>
-            <div class="flex justify-between bg-gray-950/60 p-2.5 rounded-xl border border-gray-800/50"><span>سوشوار وليسور:</span><span class="text-amber-400 font-bold">150 دج</span></div>
-            <div class="flex justify-between bg-gray-950/60 p-2.5 rounded-xl border border-gray-800/50"><span>ماسك وجه:</span><span class="text-amber-400 font-bold">200 دج</span></div>
-            <div class="col-span-2 flex justify-between bg-gray-950/60 p-2.5 rounded-xl border border-gray-800/50"><span>بروتين:</span><span class="text-amber-400 font-bold">1000 دج</span></div>
-          </div>
-        </div>
+<div id="shopStatusBanner" class="p-3 rounded-xl text-center text-sm font-bold bg-emerald-950 border border-emerald-800 text-emerald-400">
+  <span id="shopStatusText">الصالون مفتوح ويستقبل الزبائن</span>
+</div>
 
-        <!-- نموذج الحجز -->
-        <form onsubmit="bookClient(event)" class="bg-gray-900/80 backdrop-blur-md p-5 rounded-2xl border border-gray-800/80 space-y-4 shadow-xl">
-          <h2 class="text-lg font-bold text-gray-100 mb-2">حجز دور جديد</h2>
-          <div>
-            <label class="block text-xs font-medium text-gray-400 mb-1.5">الاسم الكامل *</label>
-            <input type="text" id="clientName" required placeholder="أدخل اسمك الكريم" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-amber-500 text-gray-100 shadow-inner">
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-gray-400 mb-1.5">رقم الهاتف (لإرسال تنبيه الواتساب) *</label>
-            <input type="tel" id="clientPhone" required placeholder="06XXXXXXXX" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-amber-500 text-gray-100 shadow-inner">
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-gray-400 mb-1.5">الخدمة المطلوبة</label>
-            <select id="clientService" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-amber-500 text-gray-100 shadow-inner">
-              <option value="حلاقة شعر كبار (300 دج)" data-name="حلاقة شعر كبار" data-price="300" data-duration="35">حلاقة شعر كبار - 300 دج</option>
-              <option value="حلاقة شعر صغار (250 دج)" data-name="حلاقة شعر صغار" data-price="250" data-duration="35">حلاقة شعر صغار - 250 دج</option>
-              <option value="حلاقة الذقن (100 دج)" data-name="حلاقة الذقن" data-price="100" data-duration="20">حلاقة الذقن - 100 دج</option>
-              <option value="تور دو راي (150 دج)" data-name="تور دو راي" data-price="150" data-duration="20">تور دو راي - 150 دج</option>
-              <option value="سوشوار وليسور (150 دج)" data-name="سوشوار وليسور" data-price="150" data-duration="20">سوشوار وليسور - 150 دج</option>
-              <option value="بروتين (1000 دج)" data-name="بروتين" data-price="1000" data-duration="45">بروتين - 1000 دج</option>
-              <option value="ماسك وجه (200 دج)" data-name="ماسك وجه" data-price="200" data-duration="20">ماسك وجه - 200 دج</option>
-            </select>
-          </div>
-          <button type="submit" id="bookBtn" class="w-full bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold py-3.5 rounded-xl text-sm transition shadow-lg shadow-amber-500/20">
-            تأكيد الحجز والدخول للطابور
-          </button>
-        </form>
+<!-- واجهة الزبون -->
+<section id="clientView" class="space-y-6">
 
-        <!-- قائمة المنتظرين -->
-        <div class="bg-gray-900/80 backdrop-blur-md p-5 rounded-2xl border border-gray-800/80 shadow-xl">
-          <h2 class="text-lg font-bold text-gray-100 mb-4 flex justify-between items-center">
-            <span>قائمة المنتظرين</span>
-            <span id="queueCount" class="text-xs bg-gray-800 text-amber-400 px-3 py-1 rounded-full border border-gray-700">0 في الطابور</span>
-          </h2>
-          <div id="queueList" class="space-y-2.5">
-            <p class="text-center text-gray-500 text-sm py-4">جاري تحميل الطابور...</p>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- واجهة الحلاق -->
-      <div id="adminView" class="hidden space-y-6">
-        
-        <!-- تسجيل الدخول الآمن الجديد -->
-        <div id="adminLoginBox" class="bg-gray-900/80 backdrop-blur-md p-6 rounded-2xl border border-gray-800/80 space-y-4 text-center shadow-xl">
-          <h2 class="text-lg font-bold text-gray-100">الدخول الآمن للحلاق</h2>
-          <input type="email" id="adminEmail" placeholder="البريد الإلكتروني" autocomplete="username" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3.5 text-sm focus:outline-none focus:border-amber-500 text-gray-100 shadow-inner">
-          <input type="password" id="adminPassword" placeholder="كلمة المرور" autocomplete="current-password" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3.5 text-sm focus:outline-none focus:border-amber-500 text-gray-100 shadow-inner">
-          <p id="pinError" class="text-xs text-rose-500 hidden mt-2"></p>
-          <button onclick="adminLogin()" class="w-full mt-3 bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold py-3 rounded-xl text-sm transition shadow-lg shadow-amber-500/20">
-            دخول لوحة التحكم
-          </button>
-        </div>
-
-        <!-- لوحة التحكم -->
-        <div id="adminDashboard" class="hidden space-y-6">
-          <div class="bg-gray-900/80 backdrop-blur-md p-4 rounded-2xl border border-gray-800/80 flex justify-between items-center shadow-xl">
-            <span class="text-sm font-semibold">حالة الاستقبال:</span>
-            <div class="flex gap-2">
-              <button onclick="toggleShopOpenStatus()" id="shopToggleBtn" class="px-4 py-2 rounded-xl text-xs font-bold transition bg-rose-600 hover:bg-rose-700 text-white shadow">
-                إغلاق الاستقبال
-              </button>
-              <button onclick="adminLogout()" class="px-3 py-2 rounded-xl text-xs font-bold transition bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700">
-                خروج
-              </button>
-            </div>
-          </div>
-
-          <!-- إضافة يدوية للشيوخ والأطفال -->
-          <form onsubmit="manualAddClient(event)" class="bg-gray-900/80 backdrop-blur-md p-5 rounded-2xl border border-gray-800/80 space-y-3 shadow-xl">
-            <h3 class="text-sm font-bold text-amber-400">➕ إضافة زبون مباشر (شيوخ / أطفال)</h3>
-            <input type="text" id="manualName" required placeholder="اسم الزبون (مثال: عمي أحمد)" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-2.5 text-xs text-gray-100 focus:outline-none focus:border-amber-500 shadow-inner">
-            <div class="flex gap-2">
-              <select id="manualService" class="flex-1 bg-gray-950 border border-gray-800 rounded-xl p-2.5 text-xs text-gray-100 shadow-inner">
-                <option value="حلاقة شعر كبار (300 دج)" data-name="حلاقة شعر كبار" data-price="300" data-duration="35">حلاقة شعر كبار - 300 دج</option>
-                <option value="حلاقة شعر صغار (250 دج)" data-name="حلاقة شعر صغار" data-price="250" data-duration="35">حلاقة شعر صغار - 250 دج</option>
-                <option value="حلاقة الذقن (100 دج)" data-name="حلاقة الذقن" data-price="100" data-duration="20">حلاقة الذقن - 100 دج</option>
-                <option value="تور دو راي (150 دج)" data-name="تور دو راي" data-price="150" data-duration="20">تور دو راي - 150 دج</option>
-                <option value="سوشوار وليسور (150 دج)" data-name="سوشوار وليسور" data-price="150" data-duration="20">سوشوار وليسور - 150 دج</option>
-                <option value="بروتين (1000 دج)" data-name="بروتين" data-price="1000" data-duration="45">بروتين - 1000 دج</option>
-                <option value="ماسك وجه (200 دج)" data-name="ماسك وجه" data-price="200" data-duration="20">ماسك وجه - 200 دج</option>
-              </select>
-              <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition shadow">
-                إضافة
-              </button>
-            </div>
-          </form>
-
-          <!-- إدارة الطابور للحلاق -->
-          <div class="bg-gray-900/80 backdrop-blur-md p-5 rounded-2xl border border-gray-800/80 space-y-3 shadow-xl">
-            <h2 class="text-lg font-bold text-gray-100 mb-2">إدارة الطابور النشط (مع إشعارات الواتساب)</h2>
-            <div id="adminQueueList" class="space-y-2.5">
-              <p class="text-center text-gray-500 text-sm py-4">الطابور فارغ.</p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-    </main>
-
-    <!-- التذييل -->
-    <footer class="mt-8 text-center text-xs text-gray-500 border-t border-gray-900/80 pt-4">
-      صالون أكرم للحلاقة - مزلوق، سطيف &copy; 2026
-    </footer>
-
+  <div class="bg-gray-900/80 p-4 rounded-2xl border border-gray-800">
+    <h3 class="font-bold text-amber-400 mb-3">📋 قائمة الخدمات والأسعار</h3>
+    <div id="servicesList" class="grid grid-cols-2 gap-2 text-xs"></div>
   </div>
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <form onsubmit="bookClient(event)" class="bg-gray-900/80 p-5 rounded-2xl border border-gray-800 space-y-4">
+    <h2 class="text-lg font-bold">حجز دور جديد</h2>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyAI3L5P-JG7yAbqlgLl",
-      authDomain: "barber-kimou.firebaseapp.com",
-      projectId: "barber-kimou",
-      storageBucket: "barber-kimou.firebasestorage.app",
-      messagingSenderId: "360525898197",
-      appId: "1:360525898197:web:f55b81"
+    <div>
+      <label class="block text-xs text-gray-400 mb-1">الاسم الكامل *</label>
+      <input id="clientName" required maxlength="60" placeholder="أدخل اسمك"
+        class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm">
+    </div>
+
+    <div>
+      <label class="block text-xs text-gray-400 mb-1">رقم الهاتف *</label>
+      <input id="clientPhone" type="tel" required maxlength="20" placeholder="06XXXXXXXX"
+        class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm">
+    </div>
+
+    <div>
+      <label class="block text-xs text-gray-400 mb-1">الخدمة المطلوبة</label>
+      <select id="clientService" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm"></select>
+    </div>
+
+    <button id="bookBtn" type="submit" class="w-full bg-amber-500 text-gray-950 font-bold py-3 rounded-xl">
+      تأكيد الحجز والدخول للطابور
+    </button>
+  </form>
+
+  <div class="bg-gray-900/80 p-5 rounded-2xl border border-gray-800">
+    <h2 class="text-lg font-bold mb-4 flex justify-between">
+      <span>قائمة المنتظرين</span>
+      <span id="queueCount" class="text-xs text-amber-400">0 في الطابور</span>
+    </h2>
+    <div id="queueList" class="space-y-3">
+      <p class="text-center text-gray-500 text-sm">جاري تحميل الطابور...</p>
+    </div>
+  </div>
+</section>
+
+<!-- واجهة الحلاق -->
+<section id="adminView" class="hidden space-y-6">
+
+  <div id="adminLoginBox" class="bg-gray-900/80 p-6 rounded-2xl border border-gray-800 space-y-4 text-center">
+    <h2 class="font-bold">الدخول إلى لوحة الحلاق</h2>
+    <input type="password" id="pinInput" maxlength="6" placeholder="الرمز السري"
+      class="w-full text-center bg-gray-950 border border-gray-800 rounded-xl p-3">
+    <p id="pinError" class="hidden text-xs text-rose-500">الرمز غير صحيح</p>
+    <button onclick="checkPin()" class="w-full bg-amber-500 text-gray-950 font-bold py-3 rounded-xl">دخول</button>
+  </div>
+
+  <div id="adminDashboard" class="hidden space-y-5">
+
+    <div class="bg-gray-900/80 p-4 rounded-2xl border border-gray-800 flex justify-between items-center">
+      <span class="text-sm font-bold">حالة الاستقبال</span>
+      <button onclick="toggleShopOpenStatus()" id="shopToggleBtn" class="px-4 py-2 rounded-xl text-xs font-bold bg-rose-600">
+        إغلاق الاستقبال
+      </button>
+    </div>
+
+    <div class="bg-gray-900/80 p-4 rounded-2xl border border-gray-800">
+      <h3 class="font-bold text-amber-400 mb-3">➕ إضافة زبون مباشر</h3>
+      <form onsubmit="manualAddClient(event)" class="space-y-3">
+        <input id="manualName" required maxlength="60" placeholder="اسم الزبون"
+          class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm">
+        <select id="manualService" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm"></select>
+        <button class="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl">إضافة إلى الطابور</button>
+      </form>
+    </div>
+
+    <div class="bg-gray-900/80 p-5 rounded-2xl border border-gray-800">
+      <h2 class="font-bold text-lg mb-4">إدارة الطابور</h2>
+      <div id="adminQueueList" class="space-y-3"></div>
+    </div>
+
+    <div class="bg-gray-900/80 p-5 rounded-2xl border border-gray-800">
+      <h2 class="font-bold text-lg mb-3">سجل الخدمات المكتملة</h2>
+      <div id="completedList" class="space-y-2 text-sm text-gray-300">لا توجد خدمات مكتملة بعد.</div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="mt-8 text-center text-xs text-gray-500 border-t border-gray-900 pt-4">
+  صالون أكرم للحلاقة - مزلوق، سطيف © 2026
+</footer>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+<script>
+/* إعداد Firebase */
+const firebaseConfig = {
+  apiKey: "AIzaSyAI3L5P-J7yAbqlgLl",
+  authDomain: "barber-kimou.firebaseapp.com",
+  projectId: "barber-kimou",
+  storageBucket: "barber-kimou.firebasestorage.app",
+  messagingSenderId: "360525898197",
+  appId: "1:360525898197:web:f55b81"
+};
+
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+/*
+  ملاحظة أمنية:
+  هذا الرمز لا يعتبر حماية حقيقية لأنه موجود في كود المتصفح.
+  يلزم ربط لوحة الحلاق لاحقاً بتسجيل دخول Firebase Authentication.
+*/
+const ADMIN_PIN = "200319";
+
+/* الخدمات والأسعار والمدد */
+const SERVICES = {
+  adult: {name:"حلاقة شعر الكبار", price:300, duration:35},
+  child: {name:"حلاقة شعر الصغار", price:250, duration:25},
+  beard: {name:"حلاقة الذقن", price:100, duration:15},
+  hairBeard: {name:"الشعر + الذقن للكبار", price:400, duration:35},
+  tour: {name:"تور دو راي", price:150, duration:10},
+  blow: {name:"سوشوار وليسور", price:150, duration:15},
+  protein: {name:"بروتين", price:1000, duration:60},
+  proteinHair: {name:"البروتين + الشعر", price:1300, duration:60},
+  proteinHairBeard: {name:"البروتين + الشعر + الذقن", price:1400, duration:75},
+  proteinBlow: {name:"بروتين + سيشوار + ليسور", price:1150, duration:15},
+  mask: {name:"ماسك وجه", price:200, duration:15}
+};
+
+let currentQueue = [];
+let completedQueue = [];
+let isShopOpen = true;
+let isAdminAuthenticated = false;
+
+/* أدوات مساعدة */
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;"
+  })[c]);
+}
+
+function getMillis(value) {
+  if (!value) return null;
+  if (typeof value === "number") return value;
+  if (value.toMillis) return value.toMillis();
+  const result = new Date(value).getTime();
+  return Number.isFinite(result) ? result : null;
+}
+
+function getCreatedTime(item) {
+  return getMillis(item.createdAt) || 0;
+}
+
+function getDuration(item) {
+  return Number(item.durationMinutes) || SERVICES[item.serviceKey]?.duration || 35;
+}
+
+function formatTime(timestamp) {
+  return new Date(timestamp).toLocaleTimeString("ar-DZ", {
+    hour:"2-digit", minute:"2-digit", hour12:false
+  });
+}
+
+function formatCountdown(milliseconds) {
+  const seconds = Math.max(0, Math.floor(milliseconds / 1000));
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+  return [hours, minutes, secs].map(n => String(n).padStart(2,"0")).join(":");
+}
+
+function getServicePrice(item) {
+  return Number(item.price) || SERVICES[item.serviceKey]?.price || 0;
+}
+
+function sortQueue() {
+  return [...currentQueue].sort((a,b) => {
+    return getCreatedTime(a) - getCreatedTime(b);
+  });
+}
+
+/* إنشاء خيارات الخدمات */
+function populateServices() {
+  const clientSelect = document.getElementById("clientService");
+  const manualSelect = document.getElementById("manualService");
+  const servicesList = document.getElementById("servicesList");
+
+  const options = Object.entries(SERVICES).map(([key,s]) =>
+    `<option value="${key}">${escapeHTML(s.name)} - ${s.price} دج (${s.duration} د)</option>`
+  ).join("");
+
+  clientSelect.innerHTML = options;
+  manualSelect.innerHTML = options;
+
+  servicesList.innerHTML = Object.values(SERVICES).map(s => `
+    <div class="flex flex-col justify-between bg-gray-950/70 p-2.5 rounded-xl border border-gray-800/50">
+      <span>${escapeHTML(s.name)}</span>
+      <span class="text-amber-400 font-bold mt-1">${s.price} دج · ${s.duration} دقيقة</span>
+    </div>
+  `).join("");
+}
+populateServices();
+
+/*
+  حساب جدول الانتظار:
+  - إذا توجد خدمة بدأت فعلياً، نحسب نهايتها من startedAt.
+  - إذا انتهى الوقت المتوقع ولم ينه الحلاق الخدمة، نعرض التأخير
+    ولا نعطي الزبائن موعداً وهمياً.
+  - إذا لا توجد خدمة جارية، يبدأ التقدير من الوقت الحالي.
+*/
+function buildSchedule() {
+  const queue = sortQueue();
+  const now = Date.now();
+  const active = queue.find(item => item.status === "in-progress");
+  const waiting = queue.filter(item => item.status !== "in-progress");
+
+  let cursor = now;
+  let delayed = false;
+
+  if (active) {
+    const startedAt = getMillis(active.startedAt) || now;
+    const expectedEnd = startedAt + getDuration(active) * 60000;
+
+    if (expectedEnd < now) {
+      delayed = true;
+    } else {
+      cursor = expectedEnd;
+    }
+  }
+
+  const schedule = {};
+
+  if (active) {
+    const startedAt = getMillis(active.startedAt) || now;
+    schedule[active.id] = {
+      active:true,
+      start:startedAt,
+      end:startedAt + getDuration(active) * 60000,
+      delayed:now > startedAt + getDuration(active) * 60000
+    };
+  }
+
+  waiting.forEach(item => {
+    if (delayed) {
+      schedule[item.id] = {delayed:true};
+      return;
+    }
+
+    const start = cursor;
+    const end = start + getDuration(item) * 60000;
+
+    schedule[item.id] = {
+      active:false,
+      start,
+      end,
+      delayed:false
     };
 
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
+    cursor = end;
+  });
+
+  return schedule;
+}
+
+/* عرض حالة الصالون */
+function renderShopStatus() {
+  const banner = document.getElementById("shopStatusBanner");
+  const text = document.getElementById("shopStatusText");
+  const bookBtn = document.getElementById("bookBtn");
+  const toggleBtn = document.getElementById("shopToggleBtn");
+
+  if (isShopOpen) {
+    banner.className = "p-3 rounded-xl text-center text-sm font-bold bg-emerald-950 border border-emerald-800 text-emerald-400";
+    text.textContent = "الصالون مفتوح ويستقبل الزبائن";
+    bookBtn.disabled = false;
+    if (toggleBtn) {
+      toggleBtn.textContent = "إغلاق الاستقبال";
+      toggleBtn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-rose-600";
     }
-    const db = firebase.firestore();
-    const auth = firebase.auth();
+  } else {
+    banner.className = "p-3 rounded-xl text-center text-sm font-bold bg-rose-950 border border-rose-800 text-rose-400";
+    text.textContent = "الصالون مغلق حالياً";
+    bookBtn.disabled = true;
+    if (toggleBtn) {
+      toggleBtn.textContent = "فتح الاستقبال";
+      toggleBtn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600";
+    }
+  }
+}
 
-    const MINUTES_PER_CLIENT = 35;
-    let isShopOpen = true;
-    let isAdminAuthenticated = false;
-    let currentUser = null;
-    let currentQueue = [];
-    let privateClients = {};
-    
-    let queueUnsubscribe = null;
-    let privateUnsubscribe = null;
-    let settingsUnsubscribe = null;
+/* واجهة الزبون */
+function renderClientQueue() {
+  const list = document.getElementById("queueList");
+  const count = document.getElementById("queueCount");
+  const queue = sortQueue();
+  const schedule = buildSchedule();
 
-    // تسجيل الدخول المجهول للزبائن تلقائياً
-    auth.onAuthStateChanged(async user => {
-      if (!user) {
-        try {
-          await auth.signInAnonymously();
-        } catch (error) {
-          console.error("Anonymous login failed:", error);
-        }
-        return;
-      }
-      currentUser = user;
-      startPublicQueueListener();
+  count.textContent = queue.length + " في الطابور";
+
+  if (!queue.length) {
+    list.innerHTML = `<p class="text-center text-gray-500 text-sm py-4">لا يوجد زبائن في الانتظار حالياً.</p>`;
+    return;
+  }
+
+  list.innerHTML = queue.map((item,index) => {
+    const name = escapeHTML(item.name);
+    const service = escapeHTML(item.service || SERVICES[item.serviceKey]?.name || "");
+    const plan = schedule[item.id] || {};
+    let timing = "";
+
+    if (item.status === "in-progress") {
+      const end = plan.end;
+      const remaining = end - Date.now();
+
+      timing = remaining > 0
+        ? `<div class="text-amber-400 text-xs font-bold">على الكرسي · متبقٍ ${formatCountdown(remaining)}</div>
+           <div class="text-xs text-gray-400 mt-1">النهاية المتوقعة: ${formatTime(end)}</div>`
+        : `<div class="text-rose-400 text-xs font-bold">الخدمة متأخرة عن الوقت المتوقع</div>`;
+    } else if (plan.delayed) {
+      timing = `<div class="text-rose-400 text-xs font-bold">موعدك يتحدد بعد انتهاء الخدمة الحالية</div>`;
+    } else {
+      const remaining = plan.start - Date.now();
+      timing = `
+        <div class="text-xs text-gray-400">موعد بداية دورك المتوقع</div>
+        <div class="text-lg font-bold text-amber-400">${formatTime(plan.start)}</div>
+        <div class="text-xs text-gray-400">الوقت المتبقي: <span class="text-amber-300 font-mono">${formatCountdown(remaining)}</span></div>
+      `;
+    }
+
+    return `
+      <div class="p-3.5 rounded-xl border ${item.status === "in-progress" ? "bg-amber-500/10 border-amber-500/50" : "bg-gray-950/60 border-gray-800"}">
+        <div class="flex justify-between items-start gap-2">
+          <div>
+            <span class="text-xs text-amber-400 font-bold">#${index+1}</span>
+            <p class="font-bold text-sm">${name}</p>
+            <p class="text-xs text-gray-400 mt-1">${service}</p>
+          </div>
+          <div class="text-left">${timing}</div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+/* لوحة الحلاق */
+function renderAdminQueue() {
+  if (!isAdminAuthenticated) return;
+
+  const list = document.getElementById("adminQueueList");
+  const queue = sortQueue();
+  const schedule = buildSchedule();
+
+  if (!queue.length) {
+    list.innerHTML = `<p class="text-center text-gray-500 text-sm py-4">الطابور فارغ.</p>`;
+    return;
+  }
+
+  list.innerHTML = queue.map((item,index) => {
+    const plan = schedule[item.id] || {};
+    const isActive = item.status === "in-progress";
+    const name = escapeHTML(item.name);
+    const service = escapeHTML(item.service || SERVICES[item.serviceKey]?.name || "");
+    const phone = escapeHTML(item.phone || "بدون رقم");
+    const duration = getDuration(item);
+    const price = getServicePrice(item);
+
+    let timeInfo = "";
+
+    if (isActive) {
+      const remaining = plan.end - Date.now();
+      timeInfo = remaining > 0
+        ? `بدأت: ${formatTime(plan.start)} · النهاية المتوقعة: ${formatTime(plan.end)} · متبقٍ ${formatCountdown(remaining)}`
+        : `بدأت: ${formatTime(plan.start)} · متأخر عن الوقت المتوقع`;
+    } else if (plan.delayed) {
+      timeInfo = "موعد البداية بعد انتهاء الخدمة الحالية";
+    } else {
+      timeInfo = `البداية المتوقعة: ${formatTime(plan.start)} · النهاية: ${formatTime(plan.end)}`;
+    }
+
+    let cleanPhone = (item.phone || "").replace(/[^0-9]/g,"");
+    if (cleanPhone.startsWith("0")) cleanPhone = "213" + cleanPhone.substring(1);
+    const message = encodeURIComponent(`مرحباً ${item.name}، اقترب دورك في صالون أكرم للحلاقة. يرجى التوجه إلى المحل.`);
+    const waLink = cleanPhone ? `https://wa.me/${cleanPhone}?text=${message}` : "";
+
+    return `
+      <div class="p-3.5 bg-gray-950/70 rounded-xl border ${isActive ? "border-amber-500/60" : "border-gray-800"} flex flex-col gap-3">
+        <div class="flex justify-between gap-2">
+          <div>
+            <span class="text-xs font-bold text-amber-400">#${index+1}</span>
+            <h3 class="font-bold text-sm">${name}</h3>
+            <p class="text-xs text-gray-400">الهاتف: ${phone}</p>
+            <p class="text-xs text-gray-300 mt-1">${service}</p>
+            <p class="text-xs text-gray-400">${duration} دقيقة · ${price} دج</p>
+          </div>
+          <span class="text-xs h-fit px-2 py-1 rounded border ${isActive ? "bg-amber-500/20 text-amber-400 border-amber-500/30" : "bg-gray-800 text-gray-300 border-gray-700"}">
+            ${isActive ? "على الكرسي" : "في الانتظار"}
+          </span>
+        </div>
+
+        <p class="text-xs text-amber-300">${timeInfo}</p>
+
+        <div class="flex flex-wrap gap-2 border-t border-gray-800 pt-2">
+          ${!isActive ? `<button onclick="changeStatus('${item.id}','start')" class="flex-1 bg-amber-500/20 text-amber-400 text-xs font-bold py-2 rounded-lg">بدأت الحلاقة</button>` : ""}
+          ${isActive ? `<button onclick="changeStatus('${item.id}','complete')" class="flex-1 bg-emerald-600 text-white text-xs font-bold py-2 rounded-lg">إنهاء الحلاقة</button>` : ""}
+          ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" class="flex-1 bg-emerald-600/20 text-emerald-400 text-xs font-bold py-2 text-center rounded-lg">واتساب</a>` : ""}
+          <button onclick="changeStatus('${item.id}','cancel')" class="flex-1 bg-rose-500/20 text-rose-400 text-xs font-bold py-2 rounded-lg">إلغاء</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderCompleted() {
+  const list = document.getElementById("completedList");
+  if (!isAdminAuthenticated || !list) return;
+
+  if (!completedQueue.length) {
+    list.innerHTML = "لا توجد خدمات مكتملة بعد.";
+    return;
+  }
+
+  list.innerHTML = completedQueue.slice(0,20).map(item => `
+    <div class="flex justify-between gap-2 border-b border-gray-800 py-2">
+      <div>
+        <div class="font-bold">${escapeHTML(item.name)}</div>
+        <div class="text-xs text-gray-400">${escapeHTML(item.service || "")}</div>
+      </div>
+      <div class="text-left text-xs">
+        <div class="text-emerald-400">${Number(item.price || 0)} دج</div>
+        <div class="text-gray-500">${item.completedAt ? formatTime(getMillis(item.completedAt)) : ""}</div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderUI() {
+  renderShopStatus();
+  renderClientQueue();
+  renderAdminQueue();
+  renderCompleted();
+}
+
+/* إضافة حجز من الزبون */
+async function bookClient(event) {
+  event.preventDefault();
+
+  if (!isShopOpen) {
+    alert("الصالون مغلق حالياً.");
+    return;
+  }
+
+  const name = document.getElementById("clientName").value.trim();
+  const phone = document.getElementById("clientPhone").value.trim();
+  const serviceKey = document.getElementById("clientService").value;
+  const service = SERVICES[serviceKey];
+
+  if (!name || !phone || !service) {
+    alert("يرجى ملء جميع المعلومات.");
+    return;
+  }
+
+  try {
+    document.getElementById("bookBtn").disabled = true;
+
+    await db.collection("queue").add({
+      name,
+      phone,
+      serviceKey,
+      service:service.name,
+      price:service.price,
+      durationMinutes:service.duration,
+      status:"waiting",
+      createdAt:firebase.firestore.FieldValue.serverTimestamp()
     });
 
-    // استماع الطابور العام للزبائن
-    function startPublicQueueListener() {
-      if (queueUnsubscribe) return;
-      queueUnsubscribe = db.collection("queue").orderBy("createdAt", "asc").onSnapshot(snapshot => {
-        currentQueue = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        renderUI();
-      }, error => {
-        console.error("Queue listener error:", error);
+    document.getElementById("clientName").value = "";
+    document.getElementById("clientPhone").value = "";
+    alert("تم تسجيل دورك بنجاح.");
+  } catch(error) {
+    console.error(error);
+    alert("حدث خطأ أثناء الحجز. تحقق من اتصال Firebase وقواعد Firestore.");
+  } finally {
+    document.getElementById("bookBtn").disabled = !isShopOpen;
+  }
+}
+
+/* إضافة زبون مباشر */
+async function manualAddClient(event) {
+  event.preventDefault();
+
+  const name = document.getElementById("manualName").value.trim();
+  const serviceKey = document.getElementById("manualService").value;
+  const service = SERVICES[serviceKey];
+
+  if (!name || !service) return;
+
+  try {
+    await db.collection("queue").add({
+      name:name + " (مباشر)",
+      phone:"",
+      serviceKey,
+      service:service.name,
+      price:service.price,
+      durationMinutes:service.duration,
+      status:"waiting",
+      createdAt:firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    document.getElementById("manualName").value = "";
+    alert("تمت إضافة الزبون إلى الطابور.");
+  } catch(error) {
+    console.error(error);
+    alert("تعذرت الإضافة. تحقق من إعدادات Firebase.");
+  }
+}
+
+/* بدء الخدمة أو إنهاؤها أو إلغاؤها */
+async function changeStatus(id, action) {
+  const ref = db.collection("queue").doc(id);
+  const item = currentQueue.find(x => x.id === id);
+  if (!item) return;
+
+  try {
+    if (action === "start") {
+      const active = currentQueue.find(x => x.status === "in-progress");
+
+      if (active && active.id !== id) {
+        alert("يوجد زبون آخر على الكرسي. أنهِ خدمته أولاً.");
+        return;
+      }
+
+      await ref.update({
+        status:"in-progress",
+        startedAt:firebase.firestore.FieldValue.serverTimestamp()
       });
     }
 
-    // استماع حالة الصالون
-    db.collection('settings').doc('shopStatus').onSnapshot(doc => {
-      if (doc.exists) {
-        isShopOpen = doc.data().isOpen !== false;
-        renderShopStatus();
-      } else {
-        db.collection('settings').doc('shopStatus').set({ isOpen: true });
-      }
+    if (action === "complete") {
+      if (!confirm("هل انتهت خدمة هذا الزبون؟")) return;
+
+      const batch = db.batch();
+      const historyRef = db.collection("completed").doc();
+
+      batch.set(historyRef, {
+        name:item.name,
+        phone:item.phone || "",
+        service:item.service,
+        serviceKey:item.serviceKey || "",
+        price:getServicePrice(item),
+        durationMinutes:getDuration(item),
+        startedAt:item.startedAt || null,
+        completedAt:firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      batch.delete(ref);
+      await batch.commit();
+    }
+
+    if (action === "cancel") {
+      if (!confirm("هل تريد إلغاء هذا الزبون من الطابور؟")) return;
+      await ref.delete();
+    }
+
+  } catch(error) {
+    console.error(error);
+    alert("حدث خطأ أثناء تحديث الطابور.");
+  }
+}
+
+/* فتح وإغلاق الاستقبال */
+async function toggleShopOpenStatus() {
+  try {
+    await db.collection("settings").doc("shopStatus").set({
+      isOpen:!isShopOpen
     });
+  } catch(error) {
+    console.error(error);
+    alert("تعذر تغيير حالة الاستقبال.");
+  }
+}
 
-    // تحديث الشاشة كل ثانية للعد التنازلي
-    setInterval(() => {
-      if (currentQueue.length > 0) {
-        renderUI();
-      }
-    }, 1000);
+/* تبديل الواجهات */
+function switchView() {
+  const clientView = document.getElementById("clientView");
+  const adminView = document.getElementById("adminView");
+  const button = document.getElementById("viewBtn");
 
-    function renderShopStatus() {
-      const banner = document.getElementById('shopStatusBanner');
-      const text = document.getElementById('shopStatusText');
-      const bookBtn = document.getElementById('bookBtn');
-      const toggleBtn = document.getElementById('shopToggleBtn');
+  if (clientView.classList.contains("hidden")) {
+    clientView.classList.remove("hidden");
+    adminView.classList.add("hidden");
+    button.textContent = "لوحة الحلاق";
+  } else {
+    clientView.classList.add("hidden");
+    adminView.classList.remove("hidden");
+    button.textContent = "واجهة الزبون";
+  }
+}
 
-      if (isShopOpen) {
-        if (banner) banner.className = "p-3.5 rounded-xl text-center text-sm font-bold flex items-center justify-center gap-2.5 bg-emerald-950/90 backdrop-blur border border-emerald-800/80 text-emerald-400 shadow-lg";
-        if (text) text.innerText = "الصالون مفتوح ويستقبل الزبائن";
-        if (bookBtn) bookBtn.disabled = false;
-        if (toggleBtn) {
-          toggleBtn.className = "px-4 py-2 rounded-xl text-xs font-bold transition bg-rose-600 hover:bg-rose-700 text-white shadow";
-          toggleBtn.innerText = "إغلاق الاستقبال";
-        }
-      } else {
-        if (banner) banner.className = "p-3.5 rounded-xl text-center text-sm font-bold flex items-center justify-center gap-2.5 bg-rose-950/90 backdrop-blur border border-rose-800/80 text-rose-400 shadow-lg";
-        if (text) text.innerText = "الصالون مغلق حالياً";
-        if (bookBtn) bookBtn.disabled = true;
-        if (toggleBtn) {
-          toggleBtn.className = "px-4 py-2 rounded-xl text-xs font-bold transition bg-emerald-600 hover:bg-emerald-700 text-white shadow";
-          toggleBtn.innerText = "فتح الاستقبال";
-        }
-      }
-    }
+/* الدخول إلى لوحة الحلاق */
+function checkPin() {
+  const input = document.getElementById("pinInput");
+  const error = document.getElementById("pinError");
 
-    function formatClockTime(startedAtTime, extraMinutesBefore = 0) {
-      let remainingMs = 0;
-      const totalServiceMs = MINUTES_PER_CLIENT * 60 * 1000;
+  if (input.value === ADMIN_PIN) {
+    isAdminAuthenticated = true;
+    document.getElementById("adminLoginBox").classList.add("hidden");
+    document.getElementById("adminDashboard").classList.remove("hidden");
+    error.classList.add("hidden");
+    renderUI();
+  } else {
+    error.classList.remove("hidden");
+  }
+}
 
-      if (!startedAtTime) {
-        remainingMs = (extraMinutesBefore + MINUTES_PER_CLIENT) * 60 * 1000;
-      } else {
-        const startTime = typeof startedAtTime === 'number' ? startedAtTime : (startedAtTime.toMillis ? startedAtTime.toMillis() : new Date(startedAtTime).getTime());
-        const elapsedTimeMs = Date.now() - startTime;
-        remainingMs = totalServiceMs - elapsedTimeMs + (extraMinutesBefore * 60 * 1000);
-      }
+/* استقبال تغييرات الطابور من Firebase */
+db.collection("queue").onSnapshot(snapshot => {
+  currentQueue = snapshot.docs.map(doc => ({
+    id:doc.id,
+    ...doc.data()
+  }));
 
-      if (remainingMs <= 0) return "00:00";
+  renderUI();
+}, error => {
+  console.error("Queue listener:",error);
+  document.getElementById("queueList").innerHTML =
+    `<p class="text-rose-400 text-sm">تعذر تحميل الطابور. تحقق من قواعد Firestore.</p>`;
+});
 
-      const totalSec = Math.floor(remainingMs / 1000);
-      const mins = Math.floor(totalSec / 60);
-      const secs = totalSec % 60;
-      
-      return `${mins < 10 ? '0' + mins : mins}:${secs < 10 ? '0' + secs : secs}`;
-    }
+/* حالة المحل */
+db.collection("settings").doc("shopStatus").onSnapshot(doc => {
+  if (doc.exists) {
+    isShopOpen = doc.data().isOpen !== false;
+  } else {
+    db.collection("settings").doc("shopStatus").set({isOpen:true});
+    isShopOpen = true;
+  }
+  renderShopStatus();
+});
 
-    function renderUI() {
-      const queueCount = document.getElementById('queueCount');
-      const queueList = document.getElementById('queueList');
-      if (queueCount) queueCount.innerText = currentQueue.length + " في الطابور";
+/* سجل الخدمات المكتملة */
+db.collection("completed").orderBy("completedAt","desc").limit(30).onSnapshot(snapshot => {
+  completedQueue = snapshot.docs.map(doc => ({
+    id:doc.id,
+    ...doc.data()
+  }));
+  renderCompleted();
+}, error => {
+  console.error("Completed listener:",error);
+});
 
-      const inProgressClient = currentQueue.find(item => item.status === 'in-progress');
+/* تحديث العد التنازلي كل ثانية */
+setInterval(() => {
+  renderClientQueue();
+  renderAdminQueue();
+},1000);
 
-      if (queueList) {
-        if (currentQueue.length === 0) {
-          queueList.innerHTML = `<p class="text-center text-gray-500 text-sm py-4">لا يوجد زبائن في الانتظار حالياً.</p>`;
-        } else {
-          let html = '';
-          let waitingIndexCounter = 0;
-
-          currentQueue.forEach((item, index) => {
-            const isInProgress = item.status === 'in-progress';
-            let timeDisplay = '';
-
-            if (isInProgress) {
-              const clockStr = formatClockTime(item.startedAt, 0);
-              timeDisplay = `<span class="text-xs font-bold text-amber-400 bg-amber-400/20 px-2.5 py-1 rounded-lg border border-amber-500/30 font-mono">على الكرسي (${clockStr})</span>`;
-            } else {
-              const baseStartTime = (inProgressClient && inProgressClient.startedAt) ? inProgressClient.startedAt : null;
-              const clockStr = formatClockTime(baseStartTime, waitingIndexCounter * MINUTES_PER_CLIENT);
-              timeDisplay = `<div class="text-xs text-gray-400">متبقي: <strong class="text-amber-400 font-mono">${clockStr}</strong></div>`;
-              waitingIndexCounter++;
-            }
-
-            html += `
-              <div class="p-3.5 rounded-xl flex items-center justify-between border ${isInProgress ? 'bg-amber-500/15 border-amber-500/60 shadow-lg shadow-amber-500/5' : 'bg-gray-950/60 border-gray-800/60'}">
-                <div class="flex items-center gap-3">
-                  <span class="w-7 h-7 rounded-full bg-gray-800 text-amber-400 flex items-center justify-center font-bold text-xs border border-gray-700">#${index + 1}</span>
-                  <div>
-                    <p class="font-semibold text-sm text-gray-200">${escapeHTML(item.name)}</p>
-                    <p class="text-xs text-gray-400">${escapeHTML(item.service)}</p>
-                  </div>
-                </div>
-                <div class="text-left">
-                  ${timeDisplay}
-                </div>
-              </div>
-            `;
-          });
-          queueList.innerHTML = html;
-        }
-      }
-
-      if (isAdminAuthenticated) {
-        renderAdminQueue();
-      }
-    }
-
-    function renderAdminQueue() {
-      const adminQueueList = document.getElementById('adminQueueList');
-      if (!adminQueueList) return;
-
-      if (currentQueue.length === 0) {
-        adminQueueList.innerHTML = `<p class="text-center text-gray-500 text-sm py-4">الطابور فارغ.</p>`;
-        return;
-      }
-
-      adminQueueList.innerHTML = currentQueue.map((item, index) => {
-        const isInProgress = item.status === 'in-progress';
-        const phone = escapeHTML(privateClients[item.id] || "بدون رقم");
-        
-        let cleanPhone = phone.replace(/[^0-9]/g, '');
-        if (cleanPhone.startsWith('0')) {
-          cleanPhone = '213' + cleanPhone.substring(1);
-        }
-        const waMsg = encodeURIComponent(`مرحباً ${item.name}، لقد اقترب دورك في صالون أكرم للحلاقة (مزلوق، سطيف). يرجى التوجه إلى الصالون الآن!`);
-        const waLink = cleanPhone ? `https://wa.me/${cleanPhone}?text=${waMsg}` : '#';
-
-        let remainingTextAdmin = '';
-        if (isInProgress && item.startedAt) {
-          remainingTextAdmin = ` (${formatClockTime(item.startedAt, 0)})`;
-        }
-
-        return `
-          <div class="p-3.5 bg-gray-950/70 rounded-xl border border-gray-800/70 flex flex-col gap-2.5 shadow-md">
-            <div class="flex justify-between items-start">
-              <div>
-                <span class="text-xs font-bold text-amber-400">#${index + 1}</span>
-                <h3 class="font-bold text-gray-200 text-sm">${escapeHTML(item.name)}</h3>
-                <p class="text-xs text-gray-400">الهاتف: ${phone}</p>
-                <p class="text-xs text-gray-400 mt-1">${escapeHTML(item.service)}</p>
-              </div>
-              <span class="text-xs px-2.5 py-0.5 rounded-md border ${isInProgress ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' : 'bg-gray-800/80 text-gray-400 border-gray-700'}">
-                ${isInProgress ? 'على الكرسي' + remainingTextAdmin : 'في الانتظار'}
-              </span>
-            </div>
-            <div class="flex flex-wrap gap-2 pt-2 border-t border-gray-900">
-              ${!isInProgress ? `<button onclick="changeStatus('${item.id}', 'in-progress')" class="flex-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 text-xs font-bold py-2 rounded-lg border border-amber-500/30 transition">استدعاء</button>` : ''}
-              <a href="${waLink}" target="_blank" class="flex-1 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 text-xs font-bold py-2 text-center rounded-lg border border-emerald-600/30 transition">تنبيه واتساب</a>
-              <button onclick="changeStatus('${item.id}', 'deleted')" class="flex-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 text-xs font-bold py-2 rounded-lg border border-rose-500/30 transition">إنهاء / حذف</button>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    async function bookClient(e) {
-      e.preventDefault();
-      const user = auth.currentUser;
-      if (!user) {
-        alert("تعذر التحقق من هوية المستخدم. أعد تحميل الصفحة.");
-        return;
-      }
-
-      const name = document.getElementById('clientName').value.trim();
-      const phone = document.getElementById('clientPhone').value.trim();
-      const selectElement = document.getElementById('clientService');
-      const selectedOption = selectElement.options[selectElement.selectedIndex];
-      
-      const serviceKey = selectedOption.value;
-      const serviceName = selectedOption.getAttribute('data-name');
-      const servicePrice = parseFloat(selectedOption.getAttribute('data-price'));
-      const serviceDuration = parseInt(selectedOption.getAttribute('data-duration'));
-
-      if (!isShopOpen) {
-        alert('الصالون مغلق حالياً، لا يمكن الحجز الآن.');
-        return;
-      }
-
-      try {
-        const bookingRef = db.collection("queue").doc();
-        const privateRef = db.collection("privateClients").doc(bookingRef.id);
-        const batch = db.batch();
-
-        batch.set(bookingRef, {
-          ownerUid: user.uid,
-          name: name,
-          serviceKey: serviceKey,
-          service: serviceName,
-          price: servicePrice,
-          durationMinutes: serviceDuration,
-          status: "waiting",
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        batch.set(privateRef, {
-          ownerUid: user.uid,
-          phone: phone,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        await batch.commit();
-
-        document.getElementById('clientName').value = '';
-        document.getElementById('clientPhone').value = '';
-        alert('تم تسجيل حضورك في الطابور بنجاح!');
-      } catch (err) {
-        console.error(err);
-        alert('حدث خطأ أثناء الحجز، يرجى المحاولة مرة أخرى.');
-      }
-    }
-
-    async function manualAddClient(e) {
-      e.preventDefault();
-      const user = auth.currentUser;
-      if (!user) return;
-
-      const name = document.getElementById('manualName').value.trim();
-      const selectElement = document.getElementById('manualService');
-      const selectedOption = selectElement.options[selectElement.selectedIndex];
-
-      try {
-        await db.collection('queue').add({
-          ownerUid: user.uid,
-          name: name + ' (مباشر)',
-          serviceKey: selectedOption.value,
-          service: selectedOption.getAttribute('data-name'),
-          price: parseFloat(selectedOption.getAttribute('data-price')),
-          durationMinutes: parseInt(selectedOption.getAttribute('data-duration')),
-          status: 'waiting',
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        document.getElementById('manualName').value = '';
-        alert('تمت إضافة الزبون للطابور بنجاح!');
-      } catch (err) {
-        console.error(err);
-        alert('حدث خطأ أثناء الإضافة.');
-      }
-    }
-
-    async function changeStatus(id, status) {
-      try {
-        if (status === 'deleted') {
-          const batch = db.batch();
-          batch.delete(db.collection('queue').doc(id));
-          batch.delete(db.collection('privateClients').doc(id));
-          await batch.commit();
-        } else if (status === 'in-progress') {
-          await db.collection('queue').doc(id).update({ 
-            status: status,
-            startedAt: Date.now()
-          });
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    async function toggleShopOpenStatus() {
-      try {
-        await db.collection('settings').doc('shopStatus').set({ isOpen: !isShopOpen });
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    function switchView() {
-      const clientView = document.getElementById('clientView');
-      const adminView = document.getElementById('adminView');
-      const viewBtn = document.getElementById('viewBtn');
-
-      if (clientView && adminView && viewBtn) {
-        if (clientView.classList.contains('hidden')) {
-          clientView.classList.remove('hidden');
-          adminView.classList.add('hidden');
-          viewBtn.innerText = "لوحة الحلاق";
-          viewBtn.className = "px-3.5 py-2 bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold text-xs rounded-xl transition shadow-lg shadow-amber-500/10";
-        } else {
-          clientView.classList.add('hidden');
-          adminView.classList.remove('hidden');
-          viewBtn.innerText = "واجهة الزبون";
-          viewBtn.className = "px-3.5 py-2 bg-gray-800 hover:bg-gray-700 text-amber-400 font-bold text-xs rounded-xl transition border border-gray-700 shadow";
-        }
-      }
-    }
-
-    async function adminLogin() {
-      const email = document.getElementById("adminEmail").value.trim();
-      const password = document.getElementById("adminPassword").value;
-      const error = document.getElementById("pinError");
-
-      error.classList.add("hidden");
-
-      try {
-        const result = await auth.signInWithEmailAndPassword(email, password);
-        const token = await result.user.getIdTokenResult(true);
-
-        if (token.claims.admin !== true) {
-          await auth.signOut();
-          throw new Error("هذا الحساب لا يملك صلاحية الإدارة.");
-        }
-
-        isAdminAuthenticated = true;
-        currentUser = result.user;
-
-        document.getElementById("adminLoginBox").classList.add("hidden");
-        document.getElementById("adminDashboard").classList.remove("hidden");
-
-        // جلب أرقام الهواتف للحلاق فقط
-        if (!privateUnsubscribe) {
-          privateUnsubscribe = db.collection("privateClients").onSnapshot(snapshot => {
-            privateClients = {};
-            snapshot.docs.forEach(doc => {
-              privateClients[doc.id] = doc.data().phone || "";
-            });
-            renderAdminQueue();
-          });
-        }
-
-        renderUI();
-      } catch (e) {
-        error.textContent = e.message || "تعذر تسجيل الدخول.";
-        error.classList.remove("hidden");
-      }
-    }
-
-    async function adminLogout() {
-      await auth.signOut();
-      isAdminAuthenticated = false;
-      if (privateUnsubscribe) {
-        privateUnsubscribe();
-        privateUnsubscribe = null;
-      }
-      privateClients = {};
-      document.getElementById("adminDashboard").classList.add("hidden");
-      document.getElementById("adminLoginBox").classList.remove("hidden");
-    }
-
-    function escapeHTML(str) {
-      return str.replace(/[&<>'"]/g, 
-        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
-      );
-    }
-  </script>
+renderUI();
+</script>
 </body>
 </html>
